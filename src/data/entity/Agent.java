@@ -1,8 +1,13 @@
 package data.entity;
 
+import app.controllers.util.TableProperty;
+
+import java.lang.reflect.Field;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Agent {
     /**
@@ -74,6 +79,19 @@ public class Agent {
 
     public int getAgencyId() {
         return AgencyId;
+    }
+
+    public List<TableProperty> GetProps () throws IllegalAccessException {
+        List<TableProperty> Props = new ArrayList<>();
+
+        for (Field Property : Agent.class.getDeclaredFields()) {
+            Property.setAccessible(true);
+            Object Value = Property.get(this);
+            TableProperty tempProp = new TableProperty(Property.getName(), Value);
+            Props.add(tempProp);
+        }
+
+        return Props;
     }
 
     @Override
