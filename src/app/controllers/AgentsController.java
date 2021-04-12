@@ -1,6 +1,5 @@
 package app.controllers;
 
-
 import data.MySQL;
 import data.SQLHelper;
 import data.entity.Agent;
@@ -9,6 +8,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
+import javafx.scene.layout.GridPane;
 
 import java.sql.Connection;
 import java.sql.ResultSet;
@@ -37,6 +37,7 @@ public class AgentsController {
     @FXML TextField txtPosition;
     @FXML TextField txtAgencyId;
     @FXML Button btnSave;
+    @FXML GridPane agentInfo;
 
     //Populate ListView with Agents on application start.
     public void initialize() {
@@ -102,29 +103,3 @@ public class AgentsController {
         }
     }
 }
-
-/*Unused code from TableView attempt.
-
-import app.controllers.util.TableProperty;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
-import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.scene.control.cell.TextFieldTableCell;
-
-FXML private TableView<TableProperty> AgentsTable;
-FXML private TableColumn<TableProperty, String> PropertyColumn;
-FXML private TableColumn<TableProperty, String> ValueColumn;
-
-//Methods for setting up form with TableView instead of TextFields.
-PropertyColumn.setCellValueFactory(new PropertyValueFactory<TableProperty, String>("Name"));
-ValueColumn.setCellValueFactory(new PropertyValueFactory<TableProperty, String>("Value"));
-AgentsTable.setEditable(true);
-ValueColumn.setCellFactory(TextFieldTableCell.forTableColumn());
-
-
-//Method to allowing editing of cell contents.
-public void ChangePropertyValue(TableColumn.CellEditEvent editedCell) {
-    TableProperty currentProperty = AgentsTable.getSelectionModel().getSelectedItem();
-    currentProperty.setValue(editedCell.getNewValue().toString());
-}
-*/

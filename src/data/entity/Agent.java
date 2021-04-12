@@ -77,7 +77,7 @@ public class Agent implements Entity{
 
     @Override
     public String toString() {
-        if (this.AgtMiddleInitial.equals("")) {
+        if (this.AgtMiddleInitial == null || this.AgtMiddleInitial.equals("")) {
             return this.AgtFirstName + " " + this.AgtLastName;
         } else {
             return this.AgtFirstName + " " + this.AgtMiddleInitial + " " + this.AgtLastName;
