@@ -1,9 +1,13 @@
 package data.entity;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
+import java.util.HashMap;
+
+/**
+ * Code written by: Tony (Zongzheng) Li
+ * Last Modified:
+ */
 
 public interface Entity {
-    public PreparedStatement CreateUpdateSQL(Connection connection) throws SQLException;
+    HashMap<String, Object> allProps() throws IllegalAccessException;
+    Object getPrimaryKey();
 }
