@@ -12,7 +12,6 @@ import javafx.scene.control.TextField;
 
 import java.sql.Connection;
 import java.sql.ResultSet;
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -64,12 +63,12 @@ public class AgentsController {
         Agent CurrentAgent = (Agent) AgentsListView.getSelectionModel().getSelectedItem();
 
         txtAgentId.setText(Integer.toString(CurrentAgent.getAgentId()));
-        txtFirstName.setText(CurrentAgent.getFirstName());
-        txtMiddleInitial.setText(CurrentAgent.getMiddleInitial());
-        txtLastName.setText(CurrentAgent.getLastName());
-        txtBusPhone.setText(CurrentAgent.getBusPhone());
-        txtEmail.setText(CurrentAgent.getEmail());
-        txtPosition.setText(CurrentAgent.getPosition());
+        txtFirstName.setText(CurrentAgent.getAgtFirstName());
+        txtMiddleInitial.setText(CurrentAgent.getAgtMiddleInitial());
+        txtLastName.setText(CurrentAgent.getAgtLastName());
+        txtBusPhone.setText(CurrentAgent.getAgtBusPhone());
+        txtEmail.setText(CurrentAgent.getAgtEmail());
+        txtPosition.setText(CurrentAgent.getAgtPosition());
         txtAgencyId.setText(Integer.toString(CurrentAgent.getAgencyId()));
     }
 

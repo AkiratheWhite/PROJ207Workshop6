@@ -1,10 +1,9 @@
 package data.entity;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashMap;
 
 public interface Entity {
-     public default List<Object> AllProps() throws IllegalAccessException {
-        return new ArrayList<>();
+    default HashMap<String, Object> AllProps() throws IllegalAccessException {
+        return new HashMap<>();
     }
 }

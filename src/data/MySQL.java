@@ -68,7 +68,7 @@ public class MySQL {
     /**
      * Executes an SQL statement if arguments have been set.
      * @return ResultSet corresponding to the SQL query executed.
-     * @throws SQLException
+     * @throws SQLException If there is a syntax error or connection failure, this method throws an SQL exception.
      */
     public ResultSet ExecuteQuery(Connection connection) throws SQLException {
         String sql;

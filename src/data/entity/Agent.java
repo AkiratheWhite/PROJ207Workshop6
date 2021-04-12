@@ -1,7 +1,6 @@
 package data.entity;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashMap;
 import java.lang.reflect.Field;
 
 public class Agent implements Entity{
@@ -9,12 +8,12 @@ public class Agent implements Entity{
      * Parameters corresponding to the columns in the Agents table..
      */
     private Integer AgentId;
-    private String FirstName;
-    private String MiddleInitial;
-    private String LastName;
-    private String BusPhone;
-    private String Email;
-    private String Position;
+    private String AgtFirstName;
+    private String AgtMiddleInitial;
+    private String AgtLastName;
+    private String AgtBusPhone;
+    private String AgtEmail;
+    private String AgtPosition;
     private Integer AgencyId;
 
     /**
@@ -30,17 +29,17 @@ public class Agent implements Entity{
      * @param lastName Agent's last name.
      * @param busPhone Agent's business phone number.
      * @param email Agent's email address.
-     * @param position Agent's positon/title.
+     * @param position Agent's position/title.
      * @param agencyId Agent's Agency ID number.
      */
     public Agent(Integer agentId, String firstName, String middleInitial, String lastName, String busPhone, String email, String position, Integer agencyId) {
         AgentId = agentId;
-        FirstName = firstName;
-        MiddleInitial = middleInitial;
-        LastName = lastName;
-        BusPhone = busPhone;
-        Email = email;
-        Position = position;
+        AgtFirstName = firstName;
+        AgtMiddleInitial = middleInitial;
+        AgtLastName = lastName;
+        AgtBusPhone = busPhone;
+        AgtEmail = email;
+        AgtPosition = position;
         AgencyId = agencyId;
     }
 
@@ -48,28 +47,28 @@ public class Agent implements Entity{
         return AgentId;
     }
 
-    public String getFirstName() {
-        return FirstName;
+    public String getAgtFirstName() {
+        return AgtFirstName;
     }
 
-    public String getMiddleInitial() {
-        return MiddleInitial;
+    public String getAgtMiddleInitial() {
+        return AgtMiddleInitial;
     }
 
-    public String getLastName() {
-        return LastName;
+    public String getAgtLastName() {
+        return AgtLastName;
     }
 
-    public String getBusPhone() {
-        return BusPhone;
+    public String getAgtBusPhone() {
+        return AgtBusPhone;
     }
 
-    public String getEmail() {
-        return Email;
+    public String getAgtEmail() {
+        return AgtEmail;
     }
 
-    public String getPosition() {
-        return Position;
+    public String getAgtPosition() {
+        return AgtPosition;
     }
 
     public int getAgencyId() {
@@ -78,39 +77,21 @@ public class Agent implements Entity{
 
     @Override
     public String toString() {
-        if (this.MiddleInitial == "" || this.MiddleInitial == null) {
-            return this.FirstName + " " + this.LastName;
+        if (this.AgtMiddleInitial.equals("")) {
+            return this.AgtFirstName + " " + this.AgtLastName;
         } else {
-            return this.FirstName + " " + this.MiddleInitial + " " + this.LastName;
+            return this.AgtFirstName + " " + this.AgtMiddleInitial + " " + this.AgtLastName;
         }
     }
 
-    public List<Object> AllProps () throws IllegalAccessException {
-        List<Object> Props = new ArrayList<>();
+    public HashMap<String, Object> AllProps () throws IllegalAccessException {
+        HashMap<String, Object> Props = new HashMap<>();
 
         for (Field Property : Agent.class.getDeclaredFields()) {
             Property.setAccessible(true);
-            Props.add(Property.get(this));
+            Props.put(Property.getName(), Property.get(this));
         }
 
         return Props;
     }
 }
-
-/* Unused code from TableView attempt.
-import app.controllers.util.TableProperty;
-
-    public List<TableProperty> GetProps () throws IllegalAccessException {
-        List<TableProperty> Props = new ArrayList<>();
-
-        for (Field Property : Agent.class.getDeclaredFields()) {
-            Property.setAccessible(true);
-            Object Value = Property.get(this);
-            TableProperty tempProp = new TableProperty(Property.getName(), Value);
-            Props.add(tempProp);
-        }
-
-        return Props;
-    }
-
- */

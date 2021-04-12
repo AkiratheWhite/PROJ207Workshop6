@@ -10,11 +10,11 @@ import java.util.Date;
 
 public class SQLHelper {
 
-    public static Map<String, Class> TYPE;
+    public static Map<String, Class<?>> TYPE;
 
     static
     {
-        TYPE = new HashMap<String, Class>();
+        TYPE = new HashMap<>();
 
         TYPE.put("INT", Integer.class);
         TYPE.put("INTEGER", Integer.class);
@@ -47,7 +47,7 @@ public class SQLHelper {
         //Do nothing if an empty ResultSet is inputted.
         if (result == null) return null;
 
-        Class[] ClassArgs = new Class[EntityType.getDeclaredFields().length];
+        Class<?>[] ClassArgs = new Class[EntityType.getDeclaredFields().length];
         ResultSetMetaData metaData = result.getMetaData();
         int NumOfCol = metaData.getColumnCount();
 
@@ -75,7 +75,7 @@ public class SQLHelper {
 
             //Attempt to create a new instance of the object and add it to the ArrayList.
             try {
-                Constructor co = EntityType.getConstructor(ClassArgs);
+                Constructor<?> co = EntityType.getConstructor(ClassArgs);
                 ObjList.add(co.newInstance(objArgs));
             } catch (Exception err) {
                 System.out.println("Error generating objects: " + err.getClass());
@@ -95,7 +95,7 @@ public class SQLHelper {
      */
     public static String CreateUpdateStatement (ResultSetMetaData metaData, Entity DataType) throws SQLException, IllegalAccessException {
 
-        //Throws an exception on object property and metadata mistmach.
+        //Throws an exception on object property and metadata mismatch.
         if (DataType.getClass().getDeclaredFields().length != metaData.getColumnCount()) {
             throw new SQLException("Error while updating table: Mismatch between entity and table.");
         }
@@ -103,19 +103,20 @@ public class SQLHelper {
         StringBuilder sb = new StringBuilder();
 
         //Creates a string for a SET clause in a SQL UPDATE statement.
-        //WARNING! This code will not work if the object's properties and the table's columns are not in the same order.
+        //WARNING! Assumes that first column in the table is the primary key.
         for (int i = 2; i <= metaData.getColumnCount(); i++) {
+            //Removes the comma from the string if it is the very last column to be added.
             if (i == metaData.getColumnCount()) {
-                if (DataType.AllProps().get(i-1).getClass() == String.class) {
-                    sb.append(String.format("%s='%s'", metaData.getColumnName(i), DataType.AllProps().get(i-1)));
+                if (DataType.AllProps().get(metaData.getColumnName(i)).getClass() == String.class) {
+                    sb.append(String.format("%s='%s'", metaData.getColumnName(i), DataType.AllProps().get(metaData.getColumnName(i))));
                 } else {
-                    sb.append(String.format("%s=%s", metaData.getColumnName(i), DataType.AllProps().get(i-1)));
+                    sb.append(String.format("%s=%s", metaData.getColumnName(i), DataType.AllProps().get(metaData.getColumnName(i))));
                 }
             } else {
-                if (DataType.AllProps().get(i-1).getClass() == String.class) {
-                    sb.append(String.format("%s='%s',", metaData.getColumnName(i), DataType.AllProps().get(i-1)));
+                if (DataType.AllProps().get(metaData.getColumnName(i)).getClass() == String.class) {
+                    sb.append(String.format("%s='%s',", metaData.getColumnName(i), DataType.AllProps().get(metaData.getColumnName(i))));
                 } else {
-                    sb.append(String.format("%s=%s,", metaData.getColumnName(i), DataType.AllProps().get(i-1)));
+                    sb.append(String.format("%s=%s,", metaData.getColumnName(i), DataType.AllProps().get(metaData.getColumnName(i))));
                 }
             }
         }
