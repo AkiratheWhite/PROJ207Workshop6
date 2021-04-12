@@ -1,15 +1,10 @@
 package data.entity;
 
-import app.controllers.util.TableProperty;
-
-import java.lang.reflect.Field;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.lang.reflect.Field;
 
-public class Agent {
+public class Agent implements Entity{
     /**
      * Parameters corresponding to the columns in the Agents table..
      */
@@ -81,6 +76,30 @@ public class Agent {
         return AgencyId;
     }
 
+    @Override
+    public String toString() {
+        if (this.MiddleInitial == "" || this.MiddleInitial == null) {
+            return this.FirstName + " " + this.LastName;
+        } else {
+            return this.FirstName + " " + this.MiddleInitial + " " + this.LastName;
+        }
+    }
+
+    public List<Object> AllProps () throws IllegalAccessException {
+        List<Object> Props = new ArrayList<>();
+
+        for (Field Property : Agent.class.getDeclaredFields()) {
+            Property.setAccessible(true);
+            Props.add(Property.get(this));
+        }
+
+        return Props;
+    }
+}
+
+/* Unused code from TableView attempt.
+import app.controllers.util.TableProperty;
+
     public List<TableProperty> GetProps () throws IllegalAccessException {
         List<TableProperty> Props = new ArrayList<>();
 
@@ -94,12 +113,4 @@ public class Agent {
         return Props;
     }
 
-    @Override
-    public String toString() {
-        if (this.MiddleInitial == "" || this.MiddleInitial == null) {
-            return this.FirstName + " " + this.LastName;
-        } else {
-            return this.FirstName + " " + this.MiddleInitial + " " + this.LastName;
-        }
-    }
-}
+ */

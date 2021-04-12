@@ -1,12 +1,18 @@
 package app.controllers.util;
+/*
+//Class created for TableView attempt; unused.
 
 public class TableProperty {
     public String Name;
-    public Object Value;
+    public String Value;
 
     public TableProperty (String _Name, Object _Value) {
         this.Name = _Name;
-        this.Value = _Value;
+        if (_Value == null) {
+            this.Value = "";
+        } else {
+            this.Value = _Value.toString();
+        }
     }
 
     public String getName() {
@@ -16,4 +22,9 @@ public class TableProperty {
     public Object getValue() {
         return Value;
     }
+
+    public void setValue(String value) {
+        Value = value;
+    }
 }
+*/

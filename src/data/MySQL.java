@@ -1,4 +1,5 @@
 package data;
+
 import data.entity.Entity;
 
 import java.sql.*;
@@ -72,7 +73,7 @@ public class MySQL {
     public ResultSet ExecuteQuery(Connection connection) throws SQLException {
         String sql;
 
-        if (this.args == "" || this.args == null) {
+        if (this.args.equals("")) {
             sql = String.format("SELECT %s FROM %s", select, table);
         } else {
             sql = String.format("SELECT %s FROM %s %s", select, table, args);
@@ -82,11 +83,44 @@ public class MySQL {
     }
 
     /**
-     * Executes and SQL update statement on the table that has been set using the arguments that have been set.
-     * @throws SQLException
+     * Method to execute an update statement on a table.
+     * @param connection Connection object created from MySQL instance.
+     * @param DataClass The object class that corresponds to the records in the table you're trying to update.
+     * @param PrimaryKey The primary key that corresponds to the record you're trying to update.
+     * @return True if updated succeeded, false if update failed.
+     * @throws IllegalAccessException Uses the Entity interface's method to scan private properties, can potentially throw an IllegalAccessException.
      */
-    public void ExecuteUpdate (Connection connection, Entity entity) throws SQLException {
-       PreparedStatement statement = entity.CreateUpdateSQL(connection);
-       statement.executeUpdate();
+    public boolean ExecuteUpdate (Connection connection, Entity DataClass, int PrimaryKey) throws IllegalAccessException {
+        boolean UpdateSucceeded = false; //Assume the update has not succeeded first.
+
+        //If the user has not used the builder function to specify a table, automatically fail the update.
+        if (this.table.equals("")) {
+            System.out.println("No table specified.");
+            return false;
+        }
+
+        try {
+            //Uses the database metadata to find primary key of the specified table table.
+            DatabaseMetaData dbMetaData = connection.getMetaData();
+            ResultSet rs = dbMetaData.getPrimaryKeys(null, null, this.table);
+            rs.next();
+
+            //Executes a query that will return an empty ResultSet. Obtains metadata from the specified table.
+            String MetaDataSql = String.format("SELECT * FROM %s WHERE 0 = 1", this.table);
+            ResultSetMetaData metaData = connection.createStatement().executeQuery(MetaDataSql).getMetaData();
+
+            //Creates SQL UPDATE statement using the SQLHelperClass
+            String UpdateSQL = String.format("UPDATE %s SET %s WHERE %s = %s", this.table, SQLHelper.CreateUpdateStatement(metaData, DataClass), rs.getString("COLUMN_NAME"), PrimaryKey);
+
+            //Executes the SQL UPDATE statement.
+            PreparedStatement statement = connection.prepareStatement(UpdateSQL);
+            statement.executeUpdate();
+            UpdateSucceeded = true;
+
+        } catch (SQLException err) {
+            System.out.println("Error: " + err.getClass() + ", " + err.getMessage());
+        }
+
+        return UpdateSucceeded;
     }
 }

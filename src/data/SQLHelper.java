@@ -1,14 +1,14 @@
 package data;
 
+import data.entity.Entity;
+
 import java.lang.reflect.Constructor;
 import java.math.BigDecimal;
 import java.sql.*;
+import java.util.*;
 import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
-public class ResultData {
+public class SQLHelper {
 
     public static Map<String, Class> TYPE;
 
@@ -36,16 +36,16 @@ public class ResultData {
     }
 
     /**
-     * Populates an inputted ArrayList<Object> based on a ResultSet and Class Type.
+     * Populates an inputted List<?> based on a ResultSet and Class Type.
      * @param result ResultSet that is returned from an SQL query.
-     * @param ObjectList ArrayList that has been initialized and will be used to hold data retrieved from the database.
      * @param EntityType Entity class that corresponds to the database table (e.g. 'Agent' object for 'agents' database table).
      * @throws IllegalArgumentException Throws an IllegalArgument exception if the # of columns in the database table does not match the # of declared attributes in the object class.
      */
-    public static void CreateList (ResultSet result, List<Object> ObjectList, Class<?> EntityType) throws Exception {
+    public static List<Object> CreateList (ResultSet result, Class<?> EntityType) throws Exception {
+        List<Object> ObjList = new ArrayList<>();
 
         //Do nothing if an empty ResultSet is inputted.
-        if (result == null) return;
+        if (result == null) return null;
 
         Class[] ClassArgs = new Class[EntityType.getDeclaredFields().length];
         ResultSetMetaData metaData = result.getMetaData();
@@ -76,10 +76,50 @@ public class ResultData {
             //Attempt to create a new instance of the object and add it to the ArrayList.
             try {
                 Constructor co = EntityType.getConstructor(ClassArgs);
-                ObjectList.add(co.newInstance(objArgs));
+                ObjList.add(co.newInstance(objArgs));
             } catch (Exception err) {
                 System.out.println("Error generating objects: " + err.getClass());
             }
         }
+
+        return ObjList;
+    }
+
+    /**
+     * Method to create an update statement using a database table's metadata and an object with properties that correspond to the table.
+     * @param metaData Metadata supplied by the MySQL class.
+     * @param DataType The object with the class that is mapped to the metadata of the table (e.g. 'Agent' object is matched to 'agents' table.)
+     * @return A string for the SET clause of a SQL UPDATE statement.
+     * @throws SQLException Custom SQLException to be thrown if the object's properties do not match the table's metadata.
+     * @throws IllegalAccessException Uses the Entity interface's method to scan private properties, can potentially throw an IllegalAccessException.
+     */
+    public static String CreateUpdateStatement (ResultSetMetaData metaData, Entity DataType) throws SQLException, IllegalAccessException {
+
+        //Throws an exception on object property and metadata mistmach.
+        if (DataType.getClass().getDeclaredFields().length != metaData.getColumnCount()) {
+            throw new SQLException("Error while updating table: Mismatch between entity and table.");
+        }
+
+        StringBuilder sb = new StringBuilder();
+
+        //Creates a string for a SET clause in a SQL UPDATE statement.
+        //WARNING! This code will not work if the object's properties and the table's columns are not in the same order.
+        for (int i = 2; i <= metaData.getColumnCount(); i++) {
+            if (i == metaData.getColumnCount()) {
+                if (DataType.AllProps().get(i-1).getClass() == String.class) {
+                    sb.append(String.format("%s='%s'", metaData.getColumnName(i), DataType.AllProps().get(i-1)));
+                } else {
+                    sb.append(String.format("%s=%s", metaData.getColumnName(i), DataType.AllProps().get(i-1)));
+                }
+            } else {
+                if (DataType.AllProps().get(i-1).getClass() == String.class) {
+                    sb.append(String.format("%s='%s',", metaData.getColumnName(i), DataType.AllProps().get(i-1)));
+                } else {
+                    sb.append(String.format("%s=%s,", metaData.getColumnName(i), DataType.AllProps().get(i-1)));
+                }
+            }
+        }
+
+        return sb.toString();
     }
 }

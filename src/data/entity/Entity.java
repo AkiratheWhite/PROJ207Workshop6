@@ -1,9 +1,10 @@
 package data.entity;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 public interface Entity {
-    public PreparedStatement CreateUpdateSQL(Connection connection) throws SQLException;
+     public default List<Object> AllProps() throws IllegalAccessException {
+        return new ArrayList<>();
+    }
 }
