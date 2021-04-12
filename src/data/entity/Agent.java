@@ -3,6 +3,12 @@ package data.entity;
 import java.util.HashMap;
 import java.lang.reflect.Field;
 
+
+/**
+ * Code written by: Tony (Zongzheng) Li
+ * Last Modified:
+ */
+
 public class Agent implements Entity{
     /**
      * Parameters corresponding to the columns in the Agents table..
@@ -84,7 +90,7 @@ public class Agent implements Entity{
         }
     }
 
-    public HashMap<String, Object> AllProps () throws IllegalAccessException {
+    public HashMap<String, Object> allProps() throws IllegalAccessException {
         HashMap<String, Object> Props = new HashMap<>();
 
         for (Field Property : Agent.class.getDeclaredFields()) {
@@ -93,5 +99,9 @@ public class Agent implements Entity{
         }
 
         return Props;
+    }
+
+    public Object getPrimaryKey() {
+        return this.AgentId;
     }
 }

@@ -86,7 +86,7 @@ public class SQLHelper {
     }
 
     /**
-     * Method to create an update statement using a database table's metadata and an object with properties that correspond to the table.
+     * Method to create an update statement using a database table's metadata and an object with properties that corresponds to the table.
      * @param metaData Metadata supplied by the MySQL class.
      * @param DataType The object with the class that is mapped to the metadata of the table (e.g. 'Agent' object is matched to 'agents' table.)
      * @return A string for the SET clause of a SQL UPDATE statement.
@@ -107,20 +107,70 @@ public class SQLHelper {
         for (int i = 2; i <= metaData.getColumnCount(); i++) {
             //Removes the comma from the string if it is the very last column to be added.
             if (i == metaData.getColumnCount()) {
-                if (DataType.AllProps().get(metaData.getColumnName(i)).getClass() == String.class) {
-                    sb.append(String.format("%s='%s'", metaData.getColumnName(i), DataType.AllProps().get(metaData.getColumnName(i))));
+                if (DataType.allProps().get(metaData.getColumnName(i)).getClass() == String.class) {
+                    sb.append(String.format("%s='%s'", metaData.getColumnName(i), DataType.allProps().get(metaData.getColumnName(i))));
                 } else {
-                    sb.append(String.format("%s=%s", metaData.getColumnName(i), DataType.AllProps().get(metaData.getColumnName(i))));
+                    sb.append(String.format("%s=%s", metaData.getColumnName(i), DataType.allProps().get(metaData.getColumnName(i))));
                 }
             } else {
-                if (DataType.AllProps().get(metaData.getColumnName(i)).getClass() == String.class) {
-                    sb.append(String.format("%s='%s',", metaData.getColumnName(i), DataType.AllProps().get(metaData.getColumnName(i))));
+                if (DataType.allProps().get(metaData.getColumnName(i)).getClass() == String.class) {
+                    sb.append(String.format("%s='%s',", metaData.getColumnName(i), DataType.allProps().get(metaData.getColumnName(i))));
                 } else {
-                    sb.append(String.format("%s=%s,", metaData.getColumnName(i), DataType.AllProps().get(metaData.getColumnName(i))));
+                    sb.append(String.format("%s=%s,", metaData.getColumnName(i), DataType.allProps().get(metaData.getColumnName(i))));
                 }
             }
         }
 
         return sb.toString();
+    }
+
+    /**
+     * Method to create an insert statement using a database table's metadata and an object with properties that corresponds to the table.
+     * @param metaData Metadata supplied by the MySQL class.
+     * @param DataType The object with the class that is mapped to the metadata of the table (e.g. 'Agent' object is matched to 'agents' table.)
+     * @return A string array with 2 elements. The first index represents the columns to update, the second index represents the values to insert.
+     * @throws SQLException Custom SQLException to be thrown if the object's properties do not match the table's metadata.
+     * @throws IllegalAccessException Uses the Entity interface's method to scan private properties, can potentially throw an IllegalAccessException.
+     */
+    public static String[] CreateInsertStatement (ResultSetMetaData metaData, Entity DataType) throws SQLException, IllegalAccessException {
+
+        //Throws an exception on object property and metadata mismatch.
+        if (DataType.getClass().getDeclaredFields().length != metaData.getColumnCount()) {
+            throw new SQLException("Error while updating table: Mismatch between entity and table.");
+        }
+
+        String[] InsertArgs = new String[2];
+        StringBuilder intoSB = new StringBuilder("(");
+        StringBuilder valuesSB = new StringBuilder("(");
+
+        //Creates string that specifies which columns to update.
+        for (int i = 2; i <= metaData.getColumnCount(); i++) {
+            if (i == metaData.getColumnCount()) {
+                intoSB.append(String.format("%s)", metaData.getColumnName(i)));
+            } else {
+                intoSB.append(String.format("%s, ", metaData.getColumnName(i)));
+            }
+        }
+        InsertArgs[0] = intoSB.toString();
+
+        //Creates string that specifies which values to insert into the columns.
+        for (int i = 2; i <= metaData.getColumnCount(); i++) {
+            if (i == metaData.getColumnCount()) {
+                if (DataType.allProps().get(metaData.getColumnName(i)).getClass() == String.class) {
+                    valuesSB.append(String.format("'%s')", DataType.allProps().get(metaData.getColumnName(i))));
+                } else {
+                    valuesSB.append(String.format("%s)", DataType.allProps().get(metaData.getColumnName(i))));
+                }
+            } else {
+                if (DataType.allProps().get(metaData.getColumnName(i)).getClass() == String.class) {
+                    valuesSB.append(String.format("'%s',", DataType.allProps().get(metaData.getColumnName(i))));
+                } else {
+                    valuesSB.append(String.format("%s,", DataType.allProps().get(metaData.getColumnName(i))));
+                }
+            }
+        }
+        InsertArgs[1] = valuesSB.toString();
+
+        return InsertArgs;
     }
 }
