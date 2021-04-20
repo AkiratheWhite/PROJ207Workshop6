@@ -90,17 +90,6 @@ public class Agent implements Entity{
         }
     }
 
-    public HashMap<String, Object> allProps() throws IllegalAccessException {
-        HashMap<String, Object> Props = new HashMap<>();
-
-        for (Field Property : Agent.class.getDeclaredFields()) {
-            Property.setAccessible(true);
-            Props.put(Property.getName(), Property.get(this));
-        }
-
-        return Props;
-    }
-
     public Object getPrimaryKey() {
         return this.AgentId;
     }
