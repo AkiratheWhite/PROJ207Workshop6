@@ -13,7 +13,7 @@
 
 <AnchorPane prefHeight="792.0" prefWidth="809.0" xmlns="http://javafx.com/javafx/15.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="app.controllers.CustomersController">
    <children>
-      <ListView fx:id="CustomersListView" layoutX="42.0" layoutY="23.0" onMouseClicked="#displayCustomerInfo" prefHeight="241.0" prefWidth="739.0" />
+      <ListView fx:id="CustomersListView" layoutX="42.0" layoutY="23.0" onEditStart="#enableSave" onMouseClicked="#displayCustomerInfo" prefHeight="241.0" prefWidth="739.0" />
       <GridPane fx:id="customerInfo" layoutX="57.0" layoutY="264.0" prefHeight="318.0" prefWidth="354.0">
          <columnConstraints>
             <ColumnConstraints hgrow="SOMETIMES" maxWidth="120.0" minWidth="10.0" prefWidth="97.0" />
@@ -66,10 +66,10 @@
       </GridPane>
       <Button fx:id="btnSave" disable="true" layoutX="574.0" layoutY="329.0" mnemonicParsing="false" onAction="#saveEdit" text="Save" />
       <Button fx:id="btnEdit" layoutX="516.0" layoutY="329.0" mnemonicParsing="false" onAction="#enableSave" text="Edit" />
-      <Button fx:id="btnNew" layoutX="515.0" layoutY="375.0" mnemonicParsing="false" onAction="#enableAdd" text="New" />
-      <Button fx:id="btnAdd" disable="true" layoutX="576.0" layoutY="375.0" mnemonicParsing="false" onAction="#commitAdd" text="Add" />
-      <Button fx:id="btnCancel" layoutX="512.0" layoutY="423.0" mnemonicParsing="false" onAction="#cancelAll" text="Cancel" />
-      <Button fx:id="btnDelete" layoutX="510.0" layoutY="467.0" mnemonicParsing="false" onAction="#deleteCustomer" text="Delete" />
+      <Button fx:id="btnNew" layoutX="515.0" layoutY="375.0" mnemonicParsing="false" text="New" />
+      <Button fx:id="btnAdd" disable="true" layoutX="576.0" layoutY="375.0" mnemonicParsing="false" text="Add" />
+      <Button fx:id="btnCancel" layoutX="512.0" layoutY="423.0" mnemonicParsing="false" text="Cancel" />
+      <Button fx:id="btnDelete" layoutX="510.0" layoutY="467.0" mnemonicParsing="false" text="Delete" />
       <TextArea fx:id="txtConsole" editable="false" layoutX="52.0" layoutY="626.0" prefHeight="96.0" prefWidth="705.0" />
       <Label layoutX="52.0" layoutY="609.0" text="Message Log" />
    </children>

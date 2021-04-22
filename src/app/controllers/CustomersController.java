@@ -5,6 +5,7 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.util.List;
 
+import com.mysql.cj.log.Log;
 import data.DBContext;
 import data.SQLHelper;
 import data.entity.Customer;
@@ -39,7 +40,7 @@ public class CustomersController {
     //@FXML // URL location of the FXML file that was given to the FXMLLoader
     //private URL location;
     @FXML // fx:id="CustomersListView"
-    private ListView<Customer> CustomersListView; // Value injected by FXMLLoader
+    private ListView<Object> CustomersListView; // Value injected by FXMLLoader
     @FXML // fx:id="customerInfo"
     private GridPane customerInfo; // Value injected by FXMLLoader
     @FXML // fx:id="txtCustomerId"
@@ -149,7 +150,7 @@ public class CustomersController {
      * Populates the Customer text fields with values after a customer is selected on the ListView.
      */
     public void displayCustomerInfo() {
-        Customer selectedCustomer = CustomersListView.getSelectionModel().getSelectedItem();
+        Customer selectedCustomer = (Customer)CustomersListView.getSelectionModel().getSelectedItem();
         if (selectedCustomer == null) {
             return;
         }
@@ -228,6 +229,23 @@ public class CustomersController {
         disableTextEdit();
     }
 
+    /**
+     * Enables editing of an agent's information on the form. Disables edit button and enables save button.
+     */
+    public void enableSave() {
+        System.out.println("yes working");
+        txtConsole.setText("yes working");
+        btnSave.setDisable(false);
+
+        btnEdit.setDisable(true);
+        btnNew.setDisable(true);
+        btnDelete.setDisable(true);
+
+        customerInfo.setStyle("-fx-background-color: #FFFACD");
+
+        enableTextEdit();
+    }
+
     //Enables 'edit' button and disables 'save' button.
     public void disableSave() {
         btnSave.setDisable(true);
@@ -268,7 +286,7 @@ public class CustomersController {
     }
 
     private void RefreshCustomersListView() {
-       CustomersListView.setItems(observableArrayList(getCustomers()));
+       CustomersListView.setItems(FXCollections.observableArrayList(getCustomers()));
     }
 //test
     /*private ObservableList<Customer> observableArrayList(List<Object> customers) {
