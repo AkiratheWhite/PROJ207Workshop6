@@ -1,16 +1,9 @@
 package app.controllers;
 
-//import java.net.URL;
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.util.List;
-
-import com.mysql.cj.log.Log;
 import data.DBContext;
 import data.SQLHelper;
 import data.entity.Customer;
 import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
@@ -19,13 +12,13 @@ import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
 
-import static javafx.collections.FXCollections.observableArrayList;
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.util.List;
 
 /** CustomersController Class
  * created by: Chester Solang
  */
-
-
 public class CustomersController {
 
     String url = "jdbc:mysql://localhost:3306/travelexperts";
@@ -35,10 +28,6 @@ public class CustomersController {
     //Instantiates database object.
     DBContext database = new DBContext(url, username, password);
 
-    //@FXML // ResourceBundle that was given to the FXMLLoader
-    //private ResourceBundle resources;
-    //@FXML // URL location of the FXML file that was given to the FXMLLoader
-    //private URL location;
     @FXML // fx:id="CustomersListView"
     private ListView<Object> CustomersListView; // Value injected by FXMLLoader
     @FXML // fx:id="customerInfo"
@@ -82,76 +71,42 @@ public class CustomersController {
     @FXML // fx:id="txtConsole"
     private TextArea txtConsole; // Value injected by FXMLLoader
 
-    /*@FXML
-    void ShowAgentInfo(MouseEvent event) {}
-    @FXML
-    void cancelAll(ActionEvent event) {}
-    @FXML
-    void commitAdd(ActionEvent event) {}
-    @FXML
-    void deleteCustomer(ActionEvent event) {}
-    @FXML
-    void enableAdd(ActionEvent event) {}
-    @FXML
-    void enableSave(ActionEvent event) {}
-    @FXML
-    void saveEdit(ActionEvent event) {}*/
-    /*@FXML // This method is called by the FXMLLoader when initialization is complete
-     void initialize() {
-
-        assert CustomersListView != null : "fx:id=\"CustomersListView\" was not injected: check your FXML file 'customers.fxml'.";
-        assert customerInfo != null : "fx:id=\"customerInfo\" was not injected: check your FXML file 'customers.fxml'.";
-        assert txtCustomerId != null : "fx:id=\"txtCustomerId\" was not injected: check your FXML file 'customers.fxml'.";
-        assert txtCustFirstName != null : "fx:id=\"txtCustFirstName\" was not injected: check your FXML file 'customers.fxml'.";
-        assert txtCustLastName != null : "fx:id=\"txtCustLastName\" was not injected: check your FXML file 'customers.fxml'.";
-        assert txtCustAddress != null : "fx:id=\"txtCustAddress\" was not injected: check your FXML file 'customers.fxml'.";
-        assert txtCustCity != null : "fx:id=\"txtCustCity\" was not injected: check your FXML file 'customers.fxml'.";
-        assert txtCustProv != null : "fx:id=\"txtCustProv\" was not injected: check your FXML file 'customers.fxml'.";
-        assert txtCustPostal != null : "fx:id=\"txtCustPostal\" was not injected: check your FXML file 'customers.fxml'.";
-        assert txtAgentId != null : "fx:id=\"txtAgentId\" was not injected: check your FXML file 'customers.fxml'.";
-        assert txtCustCountry != null : "fx:id=\"txtCustCountry\" was not injected: check your FXML file 'customers.fxml'.";
-        assert txtCustHomePhone != null : "fx:id=\"txtCustHomePhone\" was not injected: check your FXML file 'customers.fxml'.";
-        assert txtCustBusPhone != null : "fx:id=\"txtCustBusPhone\" was not injected: check your FXML file 'customers.fxml'.";
-        assert txtCustEmail != null : "fx:id=\"txtCustEmail\" was not injected: check your FXML file 'customers.fxml'.";
-        assert btnSave != null : "fx:id=\"btnSave\" was not injected: check your FXML file 'customers.fxml'.";
-        assert btnEdit != null : "fx:id=\"btnEdit\" was not injected: check your FXML file 'customers.fxml'.";
-        assert btnNew != null : "fx:id=\"btnNew\" was not injected: check your FXML file 'customers.fxml'.";
-        assert btnAdd != null : "fx:id=\"btnAdd\" was not injected: check your FXML file 'customers.fxml'.";
-        assert btnCancel != null : "fx:id=\"btnCancel\" was not injected: check your FXML file 'customers.fxml'.";
-        assert btnDelete != null : "fx:id=\"btnDelete\" was not injected: check your FXML file 'customers.fxml'.";
-        assert txtConsole != null : "fx:id=\"txtConsole\" was not injected: check your FXML file 'customers.fxml'.";
-    }//initialize*/
 
     /**
-     * Populate ListView of Customers on application start.
+     * Populate ListView of Customers on application load.
      */
     public void initialize() {
         try {
             RefreshCustomersListView();
-        } catch (Exception err) {
-            txtConsole.setText("Error on initialization: " + err.getMessage());
+        } catch (Exception ex) {
+            txtConsole.setText("Error initializing: " + ex.getMessage());
         }
     }//initialize
 
     /**
-     * Retrieves all customers from the database.
+     * Retrieves customer's list from database ordered by First Name.
      */
     public List<Object> getCustomers() {
-        try (Connection connection = database.OpenConnection()) {
+        try (Connection connection = database.OpenConnection())
+        {
             ResultSet result = database.Select("*").Table("customers").Args("ORDER BY CustFirstName").ExecuteQuery(connection);
             return SQLHelper.CreateList(result, Customer.class);
-        } catch (Exception err) {
-            txtConsole.setText("Error retrieving data: " + err.getMessage());
+        }
+        catch (Exception ex)
+        {
+            txtConsole.setText("Error retrieving data: " + ex.getMessage());
             return null;
         }
     }//getAllCustomers
 
     /**
-     * Populates the Customer text fields with values after a customer is selected on the ListView.
+     * Display Selected Customer Details on the text fields.
      */
-    public void displayCustomerInfo() {
+    public void displayCustomerInfo()
+    {
         Customer selectedCustomer = (Customer)CustomersListView.getSelectionModel().getSelectedItem();
-        if (selectedCustomer == null) {
+        if (selectedCustomer == null)
+        {
             return;
         }
         txtCustomerId.setText(Integer.toString(selectedCustomer.getCustomerId()));
@@ -171,55 +126,75 @@ public class CustomersController {
     /**
      * Creates a new Customer object from the text fields and tries to save this data to the database.
      */
-    public void saveEdit() {
+    public void saveEdit_btnSave() {
         try {
-            Customer currentCustomer = CreateTempCustomer();
+            Customer cust = CreateTempCustomer();
             //Attempt to create and run a SQL update statement on the database.
-            try (Connection connection = database.OpenConnection()) {
-                if (database.Table("customers").ExecuteUpdate(connection, currentCustomer, currentCustomer.getPrimaryKey())) {
+            try (Connection conn = database.OpenConnection()) {
+                if (database.Table("customers").ExecuteUpdate(conn, cust, cust.getPrimaryKey())) {
                     RefreshCustomersListView();
                     //initialize();
-                    txtConsole.setText("Edit saved to database.");
+                    txtConsole.setText("Edit successfully saved to database.");
                 }
                 else {
-                    txtConsole.setText("Saving edit failed.");
+                    txtConsole.setText("Edit failed.");
                 }
-            } catch (Exception err) {
-                txtConsole.setText("Database error: " + err.getMessage());
+            } catch (Exception ex) {
+                txtConsole.setText("Database error: " + ex.getMessage());
             }
-        } catch (Exception err) {
-            txtConsole.setText("Error while creating Customer object. (Did you leave a text field empty?)\n" + err.getClass() + ", " + err.getMessage());
+        } catch (Exception ex) {
+            txtConsole.setText("Error while creating Customer object. (Did you leave a text field empty?)\n" + ex.getClass() + ", " + ex.getMessage());
         }
         disableSave();
-    }
+    }//saveEdit_btnSave
 
     /**
      * Adds a new Customer to the database.
      */
-    public void commitAdd() {
+    public void commitAdd_btnAdd() {
         try {
-            Customer currentCustomer = CreateNewCustomer();
-
+            Customer cust = CreateNewCustomer();
             //Attempt to create and run a SQL update statement on the database.
-            try (Connection connection = database.OpenConnection()) {
-                if (database.Table("customers").ExecuteInsert(connection, currentCustomer)) {
+            try (Connection conn = database.OpenConnection()) {
+                if (database.Table("customers").ExecuteInsert(conn, cust)) {
                     RefreshCustomersListView();
                     //initialize();
                     txtConsole.setText("Customer added to database.");
                 } else {
                     txtConsole.setText("Adding Customer failed.");
                 }
-            } catch (Exception err) {
-                txtConsole.setText("Database error: " + err.getMessage());
+            } catch (Exception ex) {
+                txtConsole.setText("Database error: " + ex.getMessage());
             }
 
-        } catch (Exception err) {
-            txtConsole.setText("Error while creating Customer object. (Did you leave a text field empty?)\n" + err.getClass() + ", " + err.getMessage());
+        } catch (Exception ex) {
+            txtConsole.setText("Error while creating Customer object. (Did you leave a text field empty?)\n" + ex.getClass() + ", " + ex.getMessage());
         }
         disableAdd();
-    }
+    }//commitAdd_btnAdd
 
-    //Disables add button, enables edit and new button.
+    /**
+     * Delete a selected Customer from the database.
+     */
+    public void deleteCustomer() {
+        Customer cust = (Customer) CustomersListView.getSelectionModel().getSelectedItem();
+        if (cust == null) {
+            txtConsole.setText("Select a Customer to delete.");
+            return;
+        }
+        try (Connection conn = database.OpenConnection()) {
+            if (database.Table("customers").ExecuteDelete(conn, cust)) {
+                RefreshCustomersListView();
+                txtConsole.setText("Customer deleted from database.");
+            } else {
+                txtConsole.setText("Delete failed.");
+            }
+        } catch (Exception ex) {
+            txtConsole.setText("Error deleting record: " + ex.getClass() + ", " + ex.getMessage());
+        }
+    }//deleteCustomer
+
+    //Disables add button, enables 'edit' and 'new' button.
     public void disableAdd() {
         btnAdd.setDisable(true);
         btnEdit.setDisable(false);
@@ -229,20 +204,13 @@ public class CustomersController {
         disableTextEdit();
     }
 
-    /**
-     * Enables editing of an agent's information on the form. Disables edit button and enables save button.
-     */
-    public void enableSave() {
-        System.out.println("yes working");
-        txtConsole.setText("yes working");
+    //Modify Customer Information. Disable 'edit' button and enable 'save' button.
+    public void enableSave_btnEdit() {
         btnSave.setDisable(false);
-
         btnEdit.setDisable(true);
         btnNew.setDisable(true);
         btnDelete.setDisable(true);
-
-        customerInfo.setStyle("-fx-background-color: #FFFACD");
-
+        customerInfo.setStyle("-fx-background-color: yellow");
         enableTextEdit();
     }
 
@@ -257,12 +225,12 @@ public class CustomersController {
     }
 
     //Disables 'edit' and 'new' buttons.
-    public void enableAdd() {
+    public void enableAdd_btnNew() {
         btnAdd.setDisable(false);
         btnDelete.setDisable(true);
         btnEdit.setDisable(true);
         btnNew.setDisable(true);
-        customerInfo.setStyle("-fx-background-color: #FFFACD");
+        customerInfo.setStyle("-fx-background-color: yellow");
         enableTextEdit();
         clearFields();
     }
@@ -288,10 +256,6 @@ public class CustomersController {
     private void RefreshCustomersListView() {
        CustomersListView.setItems(FXCollections.observableArrayList(getCustomers()));
     }
-//test
-    /*private ObservableList<Customer> observableArrayList(List<Object> customers) {
-
-    }*/
 
     private Customer CreateNewCustomer() {
         return new Customer(
@@ -306,7 +270,7 @@ public class CustomersController {
                 txtCustHomePhone.getText(),
                 txtCustBusPhone.getText(),
                 txtCustEmail.getText(),
-                Integer.parseInt(txtAgentId.getText())
+                Integer.parseInt(txtCustomerId.getText())
         );
     }
 
@@ -323,12 +287,12 @@ public class CustomersController {
                 txtCustHomePhone.getText(),
                 txtCustBusPhone.getText(),
                 txtCustEmail.getText(),
-                Integer.parseInt(txtAgentId.getText())
+                Integer.parseInt(txtCustomerId.getText())
         );
     }
 
     //Clears all text fields and disables all buttons except 'Edit' and 'New'
-    public void cancelAll() {
+    public void cancel() {
         btnEdit.setDisable(false);
         btnNew.setDisable(false);
         btnDelete.setDisable(false);

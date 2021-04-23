@@ -2,9 +2,7 @@ package data.entity;
 /** Customer Class
  * created by: Chester Solang
  */
-
 public class Customer implements Entity {
-
     /**
      * Parameters corresponding to the columns in the Customers table..
      */
@@ -28,7 +26,7 @@ public class Customer implements Entity {
 
     /**
      * Constructor for Customer object.
-     * @param customerId Customer's customer ID number.
+     * @param customerId Customer ID number.
      * @param custFirstName Customer's first name.
      * @param custLastName Customer's last name.
      * @param custAddress Customer's address.
