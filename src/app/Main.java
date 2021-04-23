@@ -13,6 +13,7 @@ public class Main extends Application {
         Parent root = FXMLLoader.load(getClass().getResource("layouts/main.fxml"));
         primaryStage.setTitle("Travel Experts");
         primaryStage.setScene(new Scene(root, 600, 750));
+        primaryStage.setResizable(false);
         primaryStage.show();
     }
 
