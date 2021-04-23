@@ -6,6 +6,7 @@ import java.lang.reflect.Constructor;
 import java.math.BigDecimal;
 import java.sql.*;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.*;
 
 public class SQLHelper {
@@ -33,6 +34,8 @@ public class SQLHelper {
         TYPE.put("DATE", Date.class);
         TYPE.put("DATE", LocalDate.class);
         TYPE.put("TIME", Time.class);
+        TYPE.put("TIMESTAMP", Timestamp.class);
+        TYPE.put("DATETIME", LocalDateTime.class);
         // ...
     }
 
@@ -110,12 +113,34 @@ public class SQLHelper {
             if (i == metaData.getColumnCount()) {
                 if (DataType.allProps().get(metaData.getColumnName(i)).getClass() == String.class) {
                     sb.append(String.format("%s='%s'", metaData.getColumnName(i), DataType.allProps().get(metaData.getColumnName(i))));
+                } else if(DataType.allProps().get(metaData.getColumnName(i)).getClass() == Timestamp.class){
+    
+                    // Put Data (Date Time) Column in a String and remove two characters at the end (.0)
+                    String column_Data = String.valueOf(DataType.allProps().get(metaData.getColumnName(i)));
+                    String getThatFrustratingDecimalOut = column_Data.substring(0 , column_Data.length() - 2);
+    
+                    // Test
+                    System.out.println(getThatFrustratingDecimalOut);
+    
+                    // Append the String
+                    sb.append(String.format("%s='%s'", metaData.getColumnName(i), getThatFrustratingDecimalOut));
                 } else {
                     sb.append(String.format("%s=%s", metaData.getColumnName(i), DataType.allProps().get(metaData.getColumnName(i))));
                 }
             } else {
                 if (DataType.allProps().get(metaData.getColumnName(i)).getClass() == String.class) {
                     sb.append(String.format("%s='%s',", metaData.getColumnName(i), DataType.allProps().get(metaData.getColumnName(i))));
+                } else if(DataType.allProps().get(metaData.getColumnName(i)).getClass() == Timestamp.class){
+                    
+                    // Put Data (Date Time) Column in a String and remove two characters at the end (.0)
+                    String column_Data = String.valueOf(DataType.allProps().get(metaData.getColumnName(i)));
+                    String getThatFrustratingDecimalOut = column_Data.substring(0 , column_Data.length() - 2);
+                    
+                    // Test
+                    System.out.println(getThatFrustratingDecimalOut);
+    
+                    // Append the String Builder
+                    sb.append(String.format("%s='%s',", metaData.getColumnName(i), getThatFrustratingDecimalOut));
                 } else {
                     sb.append(String.format("%s=%s,", metaData.getColumnName(i), DataType.allProps().get(metaData.getColumnName(i))));
                 }
@@ -159,12 +184,36 @@ public class SQLHelper {
             if (i == metaData.getColumnCount()) {
                 if (DataType.allProps().get(metaData.getColumnName(i)).getClass() == String.class) {
                     valuesSB.append(String.format("'%s')", DataType.allProps().get(metaData.getColumnName(i))));
+                } else if (DataType.allProps().get(metaData.getColumnName(i)).getClass() == Timestamp.class){
+                    
+                    // Put Data (Date Time) Column in a String and remove two characters at the end (.0)
+                    String column_Data = String.valueOf(DataType.allProps().get(metaData.getColumnName(i)));
+                    String getThatFrustratingDecimalOut = column_Data.substring(0 , column_Data.length() - 2);
+    
+                    // Test
+                    System.out.println(getThatFrustratingDecimalOut);
+    
+                    // Append the String Builder
+                    valuesSB.append(String.format("'%s')", getThatFrustratingDecimalOut));
+                    
                 } else {
                     valuesSB.append(String.format("%s)", DataType.allProps().get(metaData.getColumnName(i))));
                 }
             } else {
                 if (DataType.allProps().get(metaData.getColumnName(i)).getClass() == String.class) {
                     valuesSB.append(String.format("'%s',", DataType.allProps().get(metaData.getColumnName(i))));
+                } else if (DataType.allProps().get(metaData.getColumnName(i)).getClass() == Timestamp.class){
+    
+                    // Put Data (Date Time) Column in a String and remove two characters at the end (.0)
+                    String column_Data = String.valueOf(DataType.allProps().get(metaData.getColumnName(i)));
+                    String getThatFrustratingDecimalOut = column_Data.substring(0 , column_Data.length() - 2);
+    
+                    // Test
+                    System.out.println(getThatFrustratingDecimalOut);
+    
+                    // Append the String Builder
+                    valuesSB.append(String.format("'%s',", getThatFrustratingDecimalOut));
+    
                 } else {
                     valuesSB.append(String.format("%s,", DataType.allProps().get(metaData.getColumnName(i))));
                 }
