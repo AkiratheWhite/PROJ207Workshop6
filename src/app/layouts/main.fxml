@@ -14,11 +14,13 @@
     <Tab text="Travel Packages">
       <content>
         <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
+        <fx:include source="travel_packages.fxml"/>
       </content>
     </Tab>
-      <Tab text="Untitled Tab 2">
+      <Tab text="Products">
          <content>
             <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
+           <fx:include source="products.fxml"/>
          </content>
       </Tab>
   </tabs>
