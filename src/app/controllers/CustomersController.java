@@ -18,13 +18,12 @@ import java.util.List;
 
 /** CustomersController Class
  * created by: Chester Solang
+ * class structure based on AgentsController Class by Tony (Zongzheng) Li.
  */
 public class CustomersController {
-
     String url = "jdbc:mysql://localhost:3306/travelexperts";
     String username = "root";
     String password = "";
-
     //Instantiates database object.
     DBContext database = new DBContext(url, username, password);
 
@@ -121,6 +120,8 @@ public class CustomersController {
         txtCustBusPhone.setText(selectedCustomer.getCustBusPhone());
         txtCustEmail.setText(selectedCustomer.getCustEmail());
         txtAgentId.setText(Integer.toString(selectedCustomer.getAgentId()));
+
+        customerInfo.setStyle("-fx-background-color: aqua");
     }//displayCustomerInfo
 
     /**
@@ -153,10 +154,10 @@ public class CustomersController {
      */
     public void commitAdd_btnAdd() {
         try {
-            Customer cust = CreateNewCustomer();
+            Customer customer = CreateNewCustomer();
             //Attempt to create and run a SQL update statement on the database.
             try (Connection conn = database.OpenConnection()) {
-                if (database.Table("customers").ExecuteInsert(conn, cust)) {
+                if (database.Table("customers").ExecuteInsert(conn, customer)) {
                     RefreshCustomersListView();
                     //initialize();
                     txtConsole.setText("Customer added to database.");
@@ -177,13 +178,13 @@ public class CustomersController {
      * Delete a selected Customer from the database.
      */
     public void deleteCustomer() {
-        Customer cust = (Customer) CustomersListView.getSelectionModel().getSelectedItem();
-        if (cust == null) {
+        Customer customer = (Customer) CustomersListView.getSelectionModel().getSelectedItem();
+        if (customer == null) {
             txtConsole.setText("Select a Customer to delete.");
             return;
         }
         try (Connection conn = database.OpenConnection()) {
-            if (database.Table("customers").ExecuteDelete(conn, cust)) {
+            if (database.Table("customers").ExecuteDelete(conn, customer)) {
                 RefreshCustomersListView();
                 txtConsole.setText("Customer deleted from database.");
             } else {
@@ -238,7 +239,7 @@ public class CustomersController {
     //Enables all text fields in form to be edited.
     public void enableTextEdit() {
         for (Node node : customerInfo.getChildren()) {
-            if (node instanceof TextField && node != txtAgentId) {
+            if (node instanceof TextField && node != txtCustomerId) {
                 ((TextField) node).setEditable(true);
             }
         }
@@ -247,10 +248,22 @@ public class CustomersController {
     //Disables editing in all text fields in form.
     public void disableTextEdit() {
         for (Node node : customerInfo.getChildren()) {
-            if (node instanceof TextField && node != txtAgentId) {
+            if (node instanceof TextField && node != txtCustomerId) {
                 ((TextField) node).setEditable(false);
             }
         }
+    }
+
+    //Clears all text fields and disables all buttons except 'Edit' and 'New'
+    public void cancel() {
+        btnEdit.setDisable(false);
+        btnNew.setDisable(false);
+        btnDelete.setDisable(false);
+        btnAdd.setDisable(true);
+        btnSave.setDisable(true);
+        customerInfo.setStyle("-fx-background-color: transparent");
+        clearFields();
+        disableTextEdit();
     }
 
     private void RefreshCustomersListView() {
@@ -259,7 +272,8 @@ public class CustomersController {
 
     private Customer CreateNewCustomer() {
         return new Customer(
-                0, //customerID = auto generate
+                //0, //customerID = auto generate
+                Integer.parseInt(txtCustomerId.getText()),
                 txtCustFirstName.getText(),
                 txtCustLastName.getText(),
                 txtCustAddress.getText(),
@@ -289,18 +303,6 @@ public class CustomersController {
                 txtCustEmail.getText(),
                 Integer.parseInt(txtCustomerId.getText())
         );
-    }
-
-    //Clears all text fields and disables all buttons except 'Edit' and 'New'
-    public void cancel() {
-        btnEdit.setDisable(false);
-        btnNew.setDisable(false);
-        btnDelete.setDisable(false);
-        btnAdd.setDisable(true);
-        btnSave.setDisable(true);
-        customerInfo.setStyle("-fx-background-color: transparent");
-        clearFields();
-        disableTextEdit();
     }
 
     //Clears all text fields on the form.
