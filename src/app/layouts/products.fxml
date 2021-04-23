@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ButtonBar?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.RowConstraints?>
+
+<AnchorPane prefHeight="700.0" prefWidth="590.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="app.controllers.ProductsController">
+   <children>
+      <ListView fx:id="listView_Products" layoutX="68.0" layoutY="40.0" onMouseClicked="#onMouseClick_ListViewProduct" prefHeight="179.0" prefWidth="455.0" />
+       <GridPane fx:id="gridPane_Product" layoutX="108.0" layoutY="234.0" prefHeight="162.0" prefWidth="376.0">
+           <columnConstraints>
+               <ColumnConstraints hgrow="SOMETIMES" maxWidth="120.0" minWidth="10.0" prefWidth="97.0" />
+               <ColumnConstraints hgrow="SOMETIMES" maxWidth="165.0" minWidth="10.0" prefWidth="152.0" />
+           </columnConstraints>
+           <rowConstraints>
+               <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+               <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+           </rowConstraints>
+           <children>
+               <Label text="Product ID" />
+               <Label text="Product Name" GridPane.rowIndex="1" />
+               <TextField fx:id="txtProductID" disable="true" GridPane.columnIndex="1" />
+               <TextField fx:id="txtProductName" editable="false" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+           </children>
+         <padding>
+            <Insets bottom="30.0" left="30.0" right="30.0" top="30.0" />
+         </padding>
+       </GridPane>
+      <Label layoutX="48.0" layoutY="492.0" text="Message Log" />
+      <ButtonBar layoutX="34.0" layoutY="423.0" prefHeight="40.0" prefWidth="200.0">
+         <buttons>
+            <Button fx:id="btnSave" disable="true" mnemonicParsing="false" onAction="#saveEdit" text="Save" />
+            <Button fx:id="btnAdd" disable="true" mnemonicParsing="false" onAction="#commitAdd" text="Add" />
+            <Button fx:id="btnEdit" mnemonicParsing="false" onAction="#enableSave" text="Edit" />
+            <Button fx:id="btnNew" mnemonicParsing="false" onAction="#enableAdd" text="New" />
+            <Button fx:id="btnDelete" mnemonicParsing="false" onAction="#deleteProduct" text="Delete" />
+            <Button fx:id="btnCancel" mnemonicParsing="false" onAction="#cancelAll" text="Cancel" />
+         </buttons>
+      </ButtonBar>
+      <TextArea fx:id="txtConsole" layoutX="30.0" layoutY="526.0" prefHeight="138.0" prefWidth="532.0" wrapText="true" />
+   </children>
+</AnchorPane>
