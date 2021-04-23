@@ -118,6 +118,9 @@ public class DBContext {
             statement.executeUpdate();
             UpdateSucceeded = true;
 
+        } catch (SQLIntegrityConstraintViolationException sqlICVException){
+            System.out.println("!!! " + "COLUMN ID: " + DataClass.getPrimaryKey()+ " " + "IS A PARENT ROW" + "!!!");
+            System.out.println("Error: " + sqlICVException.getClass() + ", " + sqlICVException.getMessage());
         } catch (SQLException err) {
             System.out.println("Error: " + err.getClass() + ", " + err.getMessage());
         }
@@ -191,6 +194,9 @@ public class DBContext {
             statement.executeUpdate();
             DeleteSucceeded = true;
 
+        } catch (SQLIntegrityConstraintViolationException sqlICVException){
+            System.out.println("!!! " + "COLUMN ID: " + DataClass.getPrimaryKey()+ " " + "IS A PARENT ROW" + "!!!");
+            System.out.println("Error: " + sqlICVException.getClass() + ", " + sqlICVException.getMessage());
         } catch (SQLException err) {
             System.out.println("Error: " + err.getClass() + ", " + err.getMessage());
         }
