@@ -5,8 +5,8 @@ import data.entity.Entity;
 import java.lang.reflect.Constructor;
 import java.math.BigDecimal;
 import java.sql.*;
+import java.time.LocalDate;
 import java.util.*;
-import java.util.Date;
 
 public class SQLHelper {
 
@@ -31,6 +31,7 @@ public class SQLHelper {
         TYPE.put("VARCHAR", String.class);
         TYPE.put("LONGVARCHAR", String.class);
         TYPE.put("DATE", Date.class);
+        TYPE.put("DATE", LocalDate.class);
         TYPE.put("TIME", Time.class);
         // ...
     }
