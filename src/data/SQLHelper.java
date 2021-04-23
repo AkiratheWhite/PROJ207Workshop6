@@ -31,7 +31,6 @@ public class SQLHelper {
         TYPE.put("CHAR", String.class);
         TYPE.put("VARCHAR", String.class);
         TYPE.put("LONGVARCHAR", String.class);
-        TYPE.put("DATE", Date.class);
         TYPE.put("DATE", LocalDate.class);
         TYPE.put("TIME", Time.class);
         TYPE.put("TIMESTAMP", Timestamp.class);
