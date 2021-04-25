@@ -45,8 +45,6 @@ public class CustomersController {
     private TextField txtCustProv; // Value injected by FXMLLoader
     @FXML // fx:id="txtCustPostal"
     private TextField txtCustPostal; // Value injected by FXMLLoader
-    @FXML // fx:id="txtAgentId"
-    private TextField txtAgentId; // Value injected by FXMLLoader
     @FXML // fx:id="txtCustCountry"
     private TextField txtCustCountry; // Value injected by FXMLLoader
     @FXML // fx:id="txtCustHomePhone"
@@ -55,6 +53,8 @@ public class CustomersController {
     private TextField txtCustBusPhone; // Value injected by FXMLLoader
     @FXML // fx:id="txtCustEmail"
     private TextField txtCustEmail; // Value injected by FXMLLoader
+    @FXML // fx:id="txtAgentId"
+    private TextField txtAgentId; // Value injected by FXMLLoader
     @FXML // fx:id="btnSave"
     private Button btnSave; // Value injected by FXMLLoader
     @FXML // fx:id="btnEdit"
@@ -255,7 +255,7 @@ public class CustomersController {
     }
 
     //Clears all text fields and disables all buttons except 'Edit' and 'New'
-    public void cancel() {
+    public void cancelAll() {
         btnEdit.setDisable(false);
         btnNew.setDisable(false);
         btnDelete.setDisable(false);
@@ -272,8 +272,8 @@ public class CustomersController {
 
     private Customer CreateNewCustomer() {
         return new Customer(
-                //0, //customerID = auto generate
-                Integer.parseInt(txtCustomerId.getText()),
+                0, //customerID = auto generate
+                //Integer.parseInt(txtCustomerId.getText()),
                 txtCustFirstName.getText(),
                 txtCustLastName.getText(),
                 txtCustAddress.getText(),

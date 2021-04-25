@@ -1,4 +1,8 @@
 package data.entity;
+
+import java.lang.reflect.Field;
+import java.util.HashMap;
+
 /** Customer Class
  * created by: Chester Solang
  */
@@ -132,6 +136,15 @@ public class Customer implements Entity {
     @Override
     public String toString() {
         return CustFirstName +  CustLastName;
+    }
+
+    public HashMap<String, Object> allProps() throws IllegalAccessException {
+        HashMap<String, Object> Props = new HashMap<>();
+        for (Field Property : Customer.class.getDeclaredFields()) {
+            Property.setAccessible(true);
+            Props.put(Property.getName(), Property.get(this));
+        }
+        return Props;
     }
 
     public Object getPrimaryKey() {

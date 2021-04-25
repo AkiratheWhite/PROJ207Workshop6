@@ -175,13 +175,6 @@
                <effect>
                   <Blend />
                </effect></Label>
-            <TextField fx:id="txtAgentId" disable="true" style="-fx-border-radius: 5; -fx-background-radius: 5;" GridPane.columnIndex="1" GridPane.rowIndex="11">
-               <padding>
-                  <Insets bottom="2.0" left="2.0" right="2.0" top="2.0" />
-               </padding>
-               <effect>
-                  <InnerShadow />
-               </effect></TextField>
             <TextField fx:id="txtCustCountry" editable="false" style="-fx-border-radius: 5; -fx-background-radius: 5;" GridPane.columnIndex="1" GridPane.rowIndex="7">
                <padding>
                   <Insets bottom="2.0" left="2.0" right="2.0" top="2.0" />
@@ -210,6 +203,14 @@
                <effect>
                   <InnerShadow />
                </effect></TextField>
+            <TextField fx:id="txtAgentId" editable="false" style="-fx-border-radius: 5; -fx-background-radius: 5;" GridPane.columnIndex="1" GridPane.rowIndex="11">
+               <padding>
+                  <Insets bottom="2.0" left="2.0" right="2.0" top="2.0" />
+               </padding>
+               <effect>
+                  <InnerShadow />
+               </effect>
+            </TextField>
          </children>
          <padding>
             <Insets bottom="30.0" left="30.0" right="30.0" top="30.0" />
@@ -231,7 +232,7 @@
          <effect>
             <DropShadow />
          </effect></Button>
-      <Button fx:id="btnCancel" layoutX="475.0" layoutY="350.0" mnemonicParsing="false" onAction="#cancel" style="-fx-background-radius: 3; -fx-border-radius: 3;" text="Cancel">
+      <Button fx:id="btnCancel" layoutX="475.0" layoutY="350.0" mnemonicParsing="false" onAction="#cancelAll" style="-fx-background-radius: 3; -fx-border-radius: 3;" text="Cancel">
          <effect>
             <DropShadow />
          </effect></Button>
