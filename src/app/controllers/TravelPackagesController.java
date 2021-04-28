@@ -1,21 +1,24 @@
 package app.controllers;
-
+								
+import java.math.BigDecimal;
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.time.*;
+import java.util.List;
+import javafx.scene.control.DatePicker;
 import data.DBContext;
 import data.SQLHelper;
+import data.entity.Package;
 import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
-import javafx.scene.control.*;
+import javafx.scene.control.Button;
+import javafx.scene.control.ListView;
+import javafx.scene.control.TextArea;
+import javafx.scene.control.TextField;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
-import data.entity.Package;
-import java.math.BigDecimal;
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.Timestamp;
-import java.time.LocalDate;
-import java.util.List;
 
 public class TravelPackagesController {
 				String url = "jdbc:mysql://localhost:3306/travelexperts";
@@ -42,6 +45,12 @@ public class TravelPackagesController {
 				
 				@FXML
 				private DatePicker datepicker_PackageEndDate;
+				
+				@FXML
+				private TextField txtStartTimestamp;
+				
+				@FXML
+				private TextField txtEndTimestamp;
 				
 				@FXML
 				private TextField txtAgencyCommission;
@@ -88,15 +97,32 @@ public class TravelPackagesController {
 								txtPackageID.setText(Integer.toString(currentTravelPackage.getPackageId()));
 								txtPackageName.setText(currentTravelPackage.getPkgName());
 								
-								Timestamp start_Date = currentTravelPackage.getPkgStartDate();
-								Timestamp end_Date = currentTravelPackage.getPkgEndDate();
+								LocalDateTime start_Date = currentTravelPackage.getPkgStartDate();
+								LocalDateTime end_Date = currentTravelPackage.getPkgEndDate();
 								
-								LocalDate localstart_date = start_Date.toLocalDateTime().toLocalDate();
+								LocalTime localTime_startDate = start_Date.toLocalTime();
+								LocalTime localTime_endDate = end_Date.toLocalTime();
 								
-								LocalDate localend_date = end_Date.toLocalDateTime().toLocalDate();
+								// Convert to Local Date
+								//	-	To be put in the Date Picker
+								LocalDate localstart_date = start_Date.toLocalDate();
+								LocalDate localend_date = end_Date.toLocalDate();
 								
+								// Test
+								// System.out.println(start_Date);
+								// System.out.println(end_Date);
+								
+								// Local Date Time in String
+								//	-	To be put in Text Fields
+								String formatted_startDate = String.valueOf(localTime_startDate);
+								String	formatted_endDate = String.valueOf(localTime_endDate);
+								
+								// Set Values for Timestamp to Text Fields
+								txtStartTimestamp.setText(formatted_startDate);
+								txtEndTimestamp.setText(formatted_endDate);
+								
+								// Set Values for Date to Date Picker
 								datepicker_PackageStartDate.setValue(localstart_date);
-								
 								datepicker_PackageEndDate.setValue(localend_date);
 								
 								txtareaPackageDescription.setText(currentTravelPackage.getPkgDesc());
@@ -116,10 +142,6 @@ public class TravelPackagesController {
 								
 								btnAdd.setDisable(true);
 								btnSave.setDisable(true);
-								
-								txtareaPackageDescription.setDisable(false);
-								datepicker_PackageStartDate.setDisable(false);
-								datepicker_PackageEndDate.setDisable(false);
 								
 								grid_travelpackage.setStyle("-fx-background-color: transparent");
 								
@@ -189,10 +211,6 @@ public class TravelPackagesController {
 								btnEdit.setDisable(true);
 								btnNew.setDisable(true);
 								
-								txtareaPackageDescription.setDisable(false);
-								datepicker_PackageStartDate.setDisable(false);
-								datepicker_PackageEndDate.setDisable(false);
-								
 								grid_travelpackage.setStyle("-fx-background-color: #FFFACD");
 								
 								enableTextEdit();
@@ -209,10 +227,6 @@ public class TravelPackagesController {
 								btnEdit.setDisable(true);
 								btnNew.setDisable(true);
 								btnDelete.setDisable(true);
-								
-								txtareaPackageDescription.setDisable(false);
-								datepicker_PackageStartDate.setDisable(false);
-								datepicker_PackageEndDate.setDisable(false);
 								
 								grid_travelpackage.setStyle("-fx-background-color: #FFFACD");
 								
@@ -255,6 +269,8 @@ public class TravelPackagesController {
 								assert txtAgencyCommission != null : "fx:id=\"txtAgencyCommission\" was not injected: check your FXML file 'travel_packages.fxml'.";
 								assert datepicker_PackageStartDate != null : "fx:id=\"datepicker_PackageStartDate\" was not injected: check your FXML file 'travel_packages.fxml'.";
 								assert datepicker_PackageEndDate != null : "fx:id=\"datepicker_PackageEndDate\" was not injected: check your FXML file 'travel_packages.fxml'.";
+								assert txtStartTimestamp != null : "fx:id=\"txtStartTimestamp\" was not injected: check your FXML file 'travel_packages.fxml'.";
+								assert txtEndTimestamp != null : "fx:id=\"txtEndTimestamp\" was not injected: check your FXML file 'travel_packages.fxml'.";
 								assert txtBasePrice != null : "fx:id=\"txtBasePrice\" was not injected: check your FXML file 'travel_packages.fxml'.";
 								assert txtareaPackageDescription != null : "fx:id=\"txtareaPackageDescription\" was not injected: check your FXML file 'travel_packages.fxml'.";
 								assert txtConsole != null : "fx:id=\"txtConsole\" was not injected: check your FXML file 'travel_packages.fxml'.";
@@ -265,12 +281,8 @@ public class TravelPackagesController {
 								assert btnDelete != null : "fx:id=\"btnDelete\" was not injected: check your FXML file 'travel_packages.fxml'.";
 								assert btnCancel != null : "fx:id=\"btnCancel\" was not injected: check your FXML file 'travel_packages.fxml'.";
 								
-								
 								try {
 												RefreshListView();
-												disableAdd();
-												disableTextEdit();
-												disableSave();
 								} catch (Exception err) {
 												txtConsole.appendText("Error on initialization: " + err.getMessage() + '\n');
 								}
@@ -312,11 +324,11 @@ public class TravelPackagesController {
 																((TextField) node).setEditable(true);
 												}
 												
-												if (node instanceof TextArea && node != txtPackageID) {
+												else if (node instanceof TextArea) {
 																((TextArea) node).setEditable(true);
 												}
 												
-												if (node instanceof DatePicker) {
+												else if (node instanceof DatePicker) {
 																((DatePicker) node).setEditable(true);
 												}
 								}
@@ -331,11 +343,11 @@ public class TravelPackagesController {
 																((TextField) node).setEditable(false);
 												}
 												
-												if (node instanceof TextArea && node != txtPackageID) {
+												else if (node instanceof TextArea) {
 																((TextArea) node).setEditable(false);
 												}
 												
-												if (node instanceof DatePicker && node != txtPackageID) {
+												else if (node instanceof DatePicker) {
 																((DatePicker) node).setEditable(false);
 												}
 								}
@@ -353,14 +365,16 @@ public class TravelPackagesController {
 																txtAgencyCommission.setText("");
 																txtareaPackageDescription.setText("");
 																txtBasePrice.setText("");
+																txtStartTimestamp.setText("");
+																txtEndTimestamp.setText("");
 												}
 												
-												if(node instanceof TextArea && node != txtPackageID) {
+												else if(node instanceof TextArea) {
 																((TextArea) node).setText("");
 																txtareaPackageDescription.setText("");
 												}
 												
-												if(node instanceof DatePicker && node != txtPackageID) {
+												else if(node instanceof DatePicker) {
 																((DatePicker) node).setValue(null);
 																datepicker_PackageStartDate.setValue(null);
 																datepicker_PackageEndDate.setValue(null);
@@ -378,10 +392,6 @@ public class TravelPackagesController {
 								btnNew.setDisable(false);
 								btnDelete.setDisable(false);
 								
-								txtareaPackageDescription.setDisable(true);
-								datepicker_PackageStartDate.setDisable(true);
-								datepicker_PackageEndDate.setDisable(true);
-								
 								grid_travelpackage.setStyle("-fx-background-color: transparent");
 								
 								disableTextEdit();
@@ -391,24 +401,27 @@ public class TravelPackagesController {
 				* Create New Travel Package
 				*/
 				private Package CreateNewTravelPackage() {
-								LocalDate localDate_StartDate =  LocalDate.of(
-																datepicker_PackageStartDate.getValue().getYear(),
-																datepicker_PackageStartDate.getValue().getMonthValue(),
-																datepicker_PackageStartDate.getValue().getDayOfMonth());
+								// Get as Local Dates
+								LocalDate localDate_start = datepicker_PackageStartDate.getValue();
+								LocalDate localDate_end = datepicker_PackageEndDate.getValue();
 								
-								LocalDate localDate_EndDate =  LocalDate.of(
-																datepicker_PackageEndDate.getValue().getYear(),
-																datepicker_PackageEndDate.getValue().getMonthValue(),
-																datepicker_PackageEndDate.getValue().getDayOfMonth());
+								// Get as Local Time
+								LocalTime localTime_start = LocalTime.parse(txtStartTimestamp.getText());
+								LocalTime localTime_end = LocalTime.parse(txtEndTimestamp.getText());
 								
-								Timestamp timestamp_StartDate = Timestamp.valueOf(localDate_StartDate.atStartOfDay());
-								Timestamp timestamp_EndDate = Timestamp.valueOf(localDate_EndDate.atStartOfDay());
+								// Put Local Date and Local Time to create LocalDateTime
+								//	-	To be passed to the SQL Helper
+								LocalDateTime localDateTime_StartDate = LocalDateTime.of(localDate_start, localTime_start);
+								LocalDateTime localDateTime_EndDate = LocalDateTime.of(localDate_end, localTime_end);
+								
+								//System.out.println(localDateTime_StartDate);
+								//System.out.println(localDateTime_EndDate);
 								
 								return new Package(
 																0,
 																txtPackageName.getText(),
-																timestamp_StartDate,
-																timestamp_EndDate,
+																localDateTime_StartDate,
+																localDateTime_EndDate,
 																txtareaPackageDescription.getText(),
 																BigDecimal.valueOf(Double.parseDouble(txtBasePrice.getText())),
 																BigDecimal.valueOf(Double.parseDouble(txtAgencyCommission.getText()))
@@ -419,25 +432,27 @@ public class TravelPackagesController {
 					* Create Temporary Travel Package
 					*/
 				private Package CreateTemporaryTravelPackage() {
-								// Local Start and End Date for Travel Package
-								LocalDate localDate_StartDate =  LocalDate.of(
-																datepicker_PackageStartDate.getValue().getYear(),
-																datepicker_PackageStartDate.getValue().getMonthValue(),
-																datepicker_PackageStartDate.getValue().getDayOfMonth());
+								// Get as Local Dates
+								LocalDate localDate_start = datepicker_PackageStartDate.getValue();
+								LocalDate localDate_end = datepicker_PackageEndDate.getValue();
 								
-								LocalDate localDate_EndDate =  LocalDate.of(
-																datepicker_PackageEndDate.getValue().getYear(),
-																datepicker_PackageEndDate.getValue().getMonthValue(),
-																datepicker_PackageEndDate.getValue().getDayOfMonth());
+								// Get as Local Time
+								LocalTime localTime_start = LocalTime.parse(txtStartTimestamp.getText());
+								LocalTime localTime_end = LocalTime.parse(txtEndTimestamp.getText());
 								
-								Timestamp timestamp_StartDate = Timestamp.valueOf(localDate_StartDate.atStartOfDay());
-								Timestamp timestamp_EndDate = Timestamp.valueOf(localDate_EndDate.atStartOfDay());
+								// Put Local Date and Local Time to create LocalDateTime
+								//	-	To be passed to the SQL Helper
+								LocalDateTime localDateTime_StartDate = LocalDateTime.of(localDate_start, localTime_start);
+								LocalDateTime localDateTime_EndDate = LocalDateTime.of(localDate_end, localTime_end);
+								
+								//System.out.println(localDateTime_StartDate);
+								//System.out.println(localDateTime_EndDate);
 								
 								return new Package(
 																Integer.parseInt(txtPackageID.getText()),
 																txtPackageName.getText(),
-																timestamp_StartDate,
-																timestamp_EndDate,
+																localDateTime_StartDate,
+																localDateTime_EndDate,
 																txtareaPackageDescription.getText(),
 																BigDecimal.valueOf(Double.parseDouble(txtBasePrice.getText())),
 																BigDecimal.valueOf(Double.parseDouble(txtAgencyCommission.getText()))
@@ -453,10 +468,6 @@ public class TravelPackagesController {
 								btnEdit.setDisable(false);
 								btnNew.setDisable(false);
 								btnDelete.setDisable(false);
-								
-								txtareaPackageDescription.setDisable(false);
-								datepicker_PackageStartDate.setDisable(false);
-								datepicker_PackageEndDate.setDisable(false);
 								
 								grid_travelpackage.setStyle("-fx-background-color: transparent");
 								
