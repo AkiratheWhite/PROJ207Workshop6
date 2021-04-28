@@ -1,18 +1,19 @@
 package data;
 
 import data.entity.Entity;
-
 import java.lang.reflect.Constructor;
 import java.math.BigDecimal;
 import java.sql.*;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.*;
+import java.util.Date;
 
 public class SQLHelper {
 
     public static Map<String, Class<?>> TYPE;
-
+    
     static
     {
         TYPE = new HashMap<>();
@@ -32,7 +33,7 @@ public class SQLHelper {
         TYPE.put("VARCHAR", String.class);
         TYPE.put("LONGVARCHAR", String.class);
         TYPE.put("DATE", LocalDate.class);
-        TYPE.put("TIME", Time.class);
+        TYPE.put("TIME", LocalTime.class);
         TYPE.put("TIMESTAMP", Timestamp.class);
         TYPE.put("DATETIME", LocalDateTime.class);
         // ...
@@ -48,7 +49,10 @@ public class SQLHelper {
         List<Object> ObjList = new ArrayList<>();
 
         //Do nothing if an empty ResultSet is inputted.
-        if (result == null) return null;
+        if (result == null) {
+            
+            return null;
+        }
 
         Class<?>[] ClassArgs = new Class[EntityType.getDeclaredFields().length];
         ResultSetMetaData metaData = result.getMetaData();
@@ -69,7 +73,7 @@ public class SQLHelper {
         while (result.next()) {
             //Array to hold all of the constructor arguments.
             Object[] objArgs = new Object[metaData.getColumnCount()];
-
+            
             //Populating the object constructor arguments using HashMap.
             for(int i = 0; i < NumOfCol; i++)
             {
@@ -97,7 +101,6 @@ public class SQLHelper {
      * @throws IllegalAccessException Uses the Entity interface's method to scan private properties, can potentially throw an IllegalAccessException.
      */
     public static String CreateUpdateStatement (ResultSetMetaData metaData, Entity DataType) throws SQLException, IllegalAccessException {
-
         //Throws an exception on object property and metadata mismatch.
         if (DataType.getClass().getDeclaredFields().length != metaData.getColumnCount()) {
             throw new SQLException("Error while updating table: Mismatch between entity and table.");
@@ -112,34 +115,43 @@ public class SQLHelper {
             if (i == metaData.getColumnCount()) {
                 if (DataType.allProps().get(metaData.getColumnName(i)).getClass() == String.class) {
                     sb.append(String.format("%s='%s'", metaData.getColumnName(i), DataType.allProps().get(metaData.getColumnName(i))));
-                } else if(DataType.allProps().get(metaData.getColumnName(i)).getClass() == Timestamp.class){
-    
-                    // Put Data (Date Time) Column in a String and remove two characters at the end (.0)
-                    String column_Data = String.valueOf(DataType.allProps().get(metaData.getColumnName(i)));
-                    String getThatFrustratingDecimalOut = column_Data.substring(0 , column_Data.length() - 2);
+                } else if(DataType.allProps().get(metaData.getColumnName(i)).getClass() == LocalDateTime.class){
+                    // Cast Data (Date Time) Column in LocalDateTime Object
+                    LocalDateTime column_Data = (LocalDateTime) DataType.allProps().get(metaData.getColumnName(i));
+                    
+                    // Format to String - Date Time
+                    //  -   Remove 'T' character and replace with whitespace
+                    //      to be able to be passed in the MySQL Database
+                    String formattedString = column_Data.toString().replace("T", " ");
     
                     // Test
-                    System.out.println(getThatFrustratingDecimalOut);
+                    // System.out.println("Else If: " + column_Data);
+                    // System.out.println("Else If: " + formattedString);
     
-                    // Append the String
-                    sb.append(String.format("%s='%s'", metaData.getColumnName(i), getThatFrustratingDecimalOut));
+                    // Append the String Builder
+                    sb.append(String.format("%s='%s'", metaData.getColumnName(i), formattedString));
                 } else {
                     sb.append(String.format("%s=%s", metaData.getColumnName(i), DataType.allProps().get(metaData.getColumnName(i))));
                 }
             } else {
                 if (DataType.allProps().get(metaData.getColumnName(i)).getClass() == String.class) {
                     sb.append(String.format("%s='%s',", metaData.getColumnName(i), DataType.allProps().get(metaData.getColumnName(i))));
-                } else if(DataType.allProps().get(metaData.getColumnName(i)).getClass() == Timestamp.class){
-                    
-                    // Put Data (Date Time) Column in a String and remove two characters at the end (.0)
-                    String column_Data = String.valueOf(DataType.allProps().get(metaData.getColumnName(i)));
-                    String getThatFrustratingDecimalOut = column_Data.substring(0 , column_Data.length() - 2);
-                    
+                } else if(DataType.allProps().get(metaData.getColumnName(i)).getClass() == LocalDateTime.class){
+    
+                    // Cast Data (Date Time) Column in LocalDateTime Object
+                    LocalDateTime column_Data = (LocalDateTime) DataType.allProps().get(metaData.getColumnName(i));
+    
+                    // Format to String - Date Time
+                    //  -   Remove 'T' character and replace with whitespace
+                    //      to be able to be passed in the MySQL Database
+                    String formattedString = column_Data.toString().replace("T", " ");
+    
                     // Test
-                    System.out.println(getThatFrustratingDecimalOut);
+                    // System.out.println("Else: " + column_Data);
+                    // System.out.println("Else: " + formattedString);
     
                     // Append the String Builder
-                    sb.append(String.format("%s='%s',", metaData.getColumnName(i), getThatFrustratingDecimalOut));
+                    sb.append(String.format("%s='%s',", metaData.getColumnName(i), formattedString));
                 } else {
                     sb.append(String.format("%s=%s,", metaData.getColumnName(i), DataType.allProps().get(metaData.getColumnName(i))));
                 }
@@ -183,35 +195,42 @@ public class SQLHelper {
             if (i == metaData.getColumnCount()) {
                 if (DataType.allProps().get(metaData.getColumnName(i)).getClass() == String.class) {
                     valuesSB.append(String.format("'%s')", DataType.allProps().get(metaData.getColumnName(i))));
-                } else if (DataType.allProps().get(metaData.getColumnName(i)).getClass() == Timestamp.class){
-                    
-                    // Put Data (Date Time) Column in a String and remove two characters at the end (.0)
-                    String column_Data = String.valueOf(DataType.allProps().get(metaData.getColumnName(i)));
-                    String getThatFrustratingDecimalOut = column_Data.substring(0 , column_Data.length() - 2);
+                } else if (DataType.allProps().get(metaData.getColumnName(i)).getClass() == LocalDateTime.class){
+                    // Cast Data (Date Time) Column in LocalDateTime Object
+                    LocalDateTime column_Data = (LocalDateTime) DataType.allProps().get(metaData.getColumnName(i));
+    
+                    // Format to String - Date Time
+                    //  -   Remove 'T' character and replace with whitespace
+                    //      to be able to be passed in the MySQL Database
+                    String formattedString = column_Data.toString().replace("T", " ");
     
                     // Test
-                    System.out.println(getThatFrustratingDecimalOut);
+                    // System.out.println("Else If: " + column_Data);
+                    // System.out.println("Else If: " + formattedString);
     
                     // Append the String Builder
-                    valuesSB.append(String.format("'%s')", getThatFrustratingDecimalOut));
-                    
+                    valuesSB.append(String.format("'%s')", formattedString));
                 } else {
                     valuesSB.append(String.format("%s)", DataType.allProps().get(metaData.getColumnName(i))));
                 }
             } else {
                 if (DataType.allProps().get(metaData.getColumnName(i)).getClass() == String.class) {
                     valuesSB.append(String.format("'%s',", DataType.allProps().get(metaData.getColumnName(i))));
-                } else if (DataType.allProps().get(metaData.getColumnName(i)).getClass() == Timestamp.class){
+                } else if (DataType.allProps().get(metaData.getColumnName(i)).getClass() == LocalDateTime.class){
+                    // Cast Data (Date Time) Column in LocalDateTime Object
+                    LocalDateTime column_Data = (LocalDateTime) DataType.allProps().get(metaData.getColumnName(i));
     
-                    // Put Data (Date Time) Column in a String and remove two characters at the end (.0)
-                    String column_Data = String.valueOf(DataType.allProps().get(metaData.getColumnName(i)));
-                    String getThatFrustratingDecimalOut = column_Data.substring(0 , column_Data.length() - 2);
+                    // Format to String - Date Time
+                    //  -   Remove 'T' character and replace with whitespace
+                    //      to be able to be passed in the MySQL Database
+                    String formattedString = column_Data.toString().replace("T", " ");
     
                     // Test
-                    System.out.println(getThatFrustratingDecimalOut);
+                    // System.out.println("Else If: " + column_Data);
+                    // System.out.println("Else If: " + formattedString);
     
                     // Append the String Builder
-                    valuesSB.append(String.format("'%s',", getThatFrustratingDecimalOut));
+                    valuesSB.append(String.format("'%s',", formattedString));
     
                 } else {
                     valuesSB.append(String.format("%s,", DataType.allProps().get(metaData.getColumnName(i))));
