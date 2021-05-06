@@ -110,6 +110,7 @@ public class SQLHelper {
                 if (DataType.allProps().get(metaData.getColumnName(i)).getClass() == String.class) {
                     sb.append(String.format("%s='%s'", metaData.getColumnName(i), DataType.allProps().get(metaData.getColumnName(i))));
                 } else {
+
                     sb.append(String.format("%s=%s", metaData.getColumnName(i), DataType.allProps().get(metaData.getColumnName(i))));
                 }
             } else {
