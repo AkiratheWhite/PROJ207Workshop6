@@ -11,7 +11,7 @@ import java.lang.reflect.Field;
 
 public class Agent implements Entity{
     /**
-     * Parameters corresponding to the columns in the Agents table..
+     * Parameters corresponding to the columns in the Agents table.
      */
     private Integer AgentId;
     private String AgtFirstName;
