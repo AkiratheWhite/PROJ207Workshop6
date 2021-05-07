@@ -7,7 +7,7 @@ import java.time.LocalDateTime;
  * Code written by: Texin Otinguey
  *
  * Changelog:
- * [1.01|Tony Li|05/06/21] - Converted PkgStartDate and PkgEndDate to LocalDateTime from Timestamp to fix compile error.
+ * [1.01|Tony Li|05/06/21] - Converted PkgStartDate and PkgEndDate to LocalDateTime from Timestamp to fix compile error. Removed override getProps method.
  */
 
 public class Package implements Entity {
