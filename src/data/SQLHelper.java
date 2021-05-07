@@ -131,6 +131,7 @@ public class SQLHelper {
                     // Append the String Builder
                     sb.append(String.format("%s='%s'", metaData.getColumnName(i), formattedString));
                 } else {
+
                     sb.append(String.format("%s=%s", metaData.getColumnName(i), DataType.allProps().get(metaData.getColumnName(i))));
                 }
             } else {
