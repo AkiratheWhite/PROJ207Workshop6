@@ -9,14 +9,14 @@ import java.util.HashMap;
  */
 
 public interface Entity {
-    default HashMap<String, Object> allProps() throws IllegalAccessException {
-        HashMap<String, Object> Props = new HashMap<>();
 
-        for (Field Property : Agent.class.getDeclaredFields()) {
-            Property.setAccessible(true);
-            Props.put(Property.getName(), Property.get(this));
-        }
+        default HashMap<String, Object> allProps() throws IllegalAccessException {
+            HashMap<String, Object> Props = new HashMap<>();
 
+            for (Field Property : this.getClass().getDeclaredFields()) {
+                Property.setAccessible(true);
+                Props.put(Property.getName(), Property.get(this));
+            }
         return Props;
     }
 
