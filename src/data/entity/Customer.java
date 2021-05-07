@@ -3,7 +3,7 @@ package data.entity;
 import java.lang.reflect.Field;
 import java.util.HashMap;
 
-/** Customer Class
+/** Customer Entity Class
  * created by: Chester Solang
  */
 public class Customer implements Entity {
@@ -135,17 +135,17 @@ public class Customer implements Entity {
     //toString Method
     @Override
     public String toString() {
-        return CustFirstName +  CustLastName;
+        return CustFirstName + CustLastName;
     }
 
-    public HashMap<String, Object> allProps() throws IllegalAccessException {
+    /*public HashMap<String, Object> allProps() throws IllegalAccessException {
         HashMap<String, Object> Props = new HashMap<>();
         for (Field Property : Customer.class.getDeclaredFields()) {
             Property.setAccessible(true);
             Props.put(Property.getName(), Property.get(this));
         }
         return Props;
-    }
+    }*/
 
     public Object getPrimaryKey() {
         return this.CustomerId;

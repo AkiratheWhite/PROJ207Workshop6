@@ -12,13 +12,14 @@ import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
 
+import java.awt.event.ActionEvent;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.util.List;
 
 /** CustomersController Class
  * created by: Chester Solang
- * class structure based on AgentsController Class by Tony (Zongzheng) Li.
+ *
  */
 public class CustomersController {
     String url = "jdbc:mysql://localhost:3306/travelexperts";
@@ -27,49 +28,48 @@ public class CustomersController {
     //Instantiates database object.
     DBContext database = new DBContext(url, username, password);
 
-    @FXML // fx:id="CustomersListView"
-    private ListView<Object> CustomersListView; // Value injected by FXMLLoader
-    @FXML // fx:id="customerInfo"
-    private GridPane customerInfo; // Value injected by FXMLLoader
-    @FXML // fx:id="txtCustomerId"
-    private TextField txtCustomerId; // Value injected by FXMLLoader
-    @FXML // fx:id="txtCustFirstName"
-    private TextField txtCustFirstName; // Value injected by FXMLLoader
-    @FXML // fx:id="txtCustLastName"
-    private TextField txtCustLastName; // Value injected by FXMLLoader
-    @FXML // fx:id="txtCustAddress"
-    private TextField txtCustAddress; // Value injected by FXMLLoader
-    @FXML // fx:id="txtCustCity"
-    private TextField txtCustCity; // Value injected by FXMLLoader
-    @FXML // fx:id="txtCustProv"
-    private TextField txtCustProv; // Value injected by FXMLLoader
-    @FXML // fx:id="txtCustPostal"
-    private TextField txtCustPostal; // Value injected by FXMLLoader
-    @FXML // fx:id="txtCustCountry"
-    private TextField txtCustCountry; // Value injected by FXMLLoader
-    @FXML // fx:id="txtCustHomePhone"
-    private TextField txtCustHomePhone; // Value injected by FXMLLoader
-    @FXML // fx:id="txtCustBusPhone"
-    private TextField txtCustBusPhone; // Value injected by FXMLLoader
-    @FXML // fx:id="txtCustEmail"
-    private TextField txtCustEmail; // Value injected by FXMLLoader
-    @FXML // fx:id="txtAgentId"
-    private TextField txtAgentId; // Value injected by FXMLLoader
-    @FXML // fx:id="btnSave"
-    private Button btnSave; // Value injected by FXMLLoader
-    @FXML // fx:id="btnEdit"
-    private Button btnEdit; // Value injected by FXMLLoader
-    @FXML // fx:id="btnNew"
-    private Button btnNew; // Value injected by FXMLLoader
-    @FXML // fx:id="btnAdd"
-    private Button btnAdd; // Value injected by FXMLLoader
-    @FXML // fx:id="btnCancel"
-    private Button btnCancel; // Value injected by FXMLLoader
-    @FXML // fx:id="btnDelete"
-    private Button btnDelete; // Value injected by FXMLLoader
-    @FXML // fx:id="txtConsole"
-    private TextArea txtConsole; // Value injected by FXMLLoader
-
+    @FXML
+    private ListView<Object> CustomersListView;
+    @FXML
+    private GridPane customerInfo;
+    @FXML
+    private TextField txtCustomerId;
+    @FXML
+    private TextField txtCustFirstName;
+    @FXML
+    private TextField txtCustLastName;
+    @FXML
+    private TextField txtCustAddress;
+    @FXML
+    private TextField txtCustCity;
+    @FXML
+    private TextField txtCustProv;
+    @FXML
+    private TextField txtCustPostal;
+    @FXML
+    private TextField txtCustCountry;
+    @FXML
+    private TextField txtCustHomePhone;
+    @FXML
+    private TextField txtCustBusPhone;
+    @FXML
+    private TextField txtCustEmail;
+    @FXML
+    private TextField txtAgentId;
+    @FXML
+    private Button btnSave;
+    @FXML
+    private Button btnEdit;
+    @FXML
+    private Button btnNew;
+    @FXML
+    private Button btnAdd;
+    @FXML
+    private Button btnCancel;
+    @FXML
+    private Button btnDelete;
+    @FXML
+    private TextArea txtConsole;
 
     /**
      * Populate ListView of Customers on application load.
@@ -109,7 +109,7 @@ public class CustomersController {
             return;
         }
         txtCustomerId.setText(Integer.toString(selectedCustomer.getCustomerId()));
-        txtCustFirstName.setText(selectedCustomer.getCustAddress());
+        txtCustFirstName.setText(selectedCustomer.getCustFirstName());
         txtCustLastName.setText(selectedCustomer.getCustLastName());
         txtCustAddress.setText(selectedCustomer.getCustAddress());
         txtCustCity.setText(selectedCustomer.getCustCity());
@@ -129,10 +129,10 @@ public class CustomersController {
      */
     public void saveEdit_btnSave() {
         try {
-            Customer cust = CreateTempCustomer();
+            Customer customer = CreateTempCustomer();
             //Attempt to create and run a SQL update statement on the database.
             try (Connection conn = database.OpenConnection()) {
-                if (database.Table("customers").ExecuteUpdate(conn, cust, cust.getPrimaryKey())) {
+                if (database.Table("customers").ExecuteUpdate(conn, customer, customer.getPrimaryKey())) {
                     RefreshCustomersListView();
                     //initialize();
                     txtConsole.setText("Edit successfully saved to database.");
@@ -272,8 +272,7 @@ public class CustomersController {
 
     private Customer CreateNewCustomer() {
         return new Customer(
-                0, //customerID = auto generate
-                //Integer.parseInt(txtCustomerId.getText()),
+                0, //customerID
                 txtCustFirstName.getText(),
                 txtCustLastName.getText(),
                 txtCustAddress.getText(),
@@ -284,7 +283,7 @@ public class CustomersController {
                 txtCustHomePhone.getText(),
                 txtCustBusPhone.getText(),
                 txtCustEmail.getText(),
-                Integer.parseInt(txtCustomerId.getText())
+                Integer.parseInt(txtAgentId.getText())
         );
     }
 
@@ -301,7 +300,7 @@ public class CustomersController {
                 txtCustHomePhone.getText(),
                 txtCustBusPhone.getText(),
                 txtCustEmail.getText(),
-                Integer.parseInt(txtCustomerId.getText())
+                Integer.parseInt(txtAgentId.getText())
         );
     }
 

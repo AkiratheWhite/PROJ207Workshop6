@@ -187,6 +187,7 @@ public class DBContext {
             String DeleteSQL = String.format("DELETE FROM %s WHERE %s = %s", this.table, rs.getString("COLUMN_NAME"), DataClass.getPrimaryKey());
             PreparedStatement statement = connection.prepareStatement(DeleteSQL);
 
+            System.out.println(DeleteSQL);
             //Executes the SQL DELETE statement.
             statement.executeUpdate();
             DeleteSucceeded = true;
