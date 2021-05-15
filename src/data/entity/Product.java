@@ -4,12 +4,13 @@ import java.lang.reflect.Field;
 import java.util.HashMap;
 
 /**
+ *  Code Written by: Texin D. Otinguey 
  *  * Changelog:
  *  * [1.01|Tony Li|05/06/21] - Removed override getProps method.
  */
 public class Product implements Entity {
     /**
-     * Parameters corresponding to the columns in the Agents table..
+     * Parameters corresponding to the columns in the Product table..
      */
     private Integer ProductId;
     private String ProdName;
@@ -21,7 +22,7 @@ public class Product implements Entity {
     }
 
     /**
-     * Constructor for Agent object.
+     * Constructor for Product object.
      *
      * @param productId Product ID.
      * @param prodName  Product Name.
