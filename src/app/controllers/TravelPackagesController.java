@@ -18,6 +18,7 @@ import java.time.LocalTime;
 import java.util.List;
 
 /**
+ * Code Written by: Texin D. Otinguey
  * Changelog:
  * [1.01|Tony Li|05/06/21] - Removed unused event arguments and removed code duplication by extracting to method object.
  */
