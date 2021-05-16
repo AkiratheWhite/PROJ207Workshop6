@@ -10,10 +10,16 @@ import java.time.LocalTime;
 import java.util.*;
 import java.util.Date;
 
+/**
+ * Code written by: Tony (Zongzheng) Li
+ * Last modified on (MM/DD/YY): 05/14/21
+ */
+
 public class SQLHelper {
 
     public static Map<String, Class<?>> TYPE;
-    
+
+     //Initializes Map to convert MySQL datatype to Java data type.
     static
     {
         TYPE = new HashMap<>();
