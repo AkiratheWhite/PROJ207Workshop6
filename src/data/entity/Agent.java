@@ -1,17 +1,13 @@
 package data.entity;
 
-import java.util.HashMap;
-import java.lang.reflect.Field;
-
-
 /**
  * Code written by: Tony (Zongzheng) Li
- * Last Modified:
+ * Last modified on (MM/DD/YY): 05/14/21
  */
 
 public class Agent implements Entity{
     /**
-     * Parameters corresponding to the columns in the Agents table..
+     * Parameters corresponding to the columns in the Agents table.
      */
     private Integer AgentId;
     private String AgtFirstName;
