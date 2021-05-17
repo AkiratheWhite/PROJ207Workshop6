@@ -18,7 +18,10 @@ import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
-
+/**
+ * Code written by: dhaval shah
+ * Last modified on (MM/DD/YY): 05/14/21
+ */
 public class BookingController {
 
     String url = "jdbc:mysql://localhost:3306/travelexperts";
@@ -155,7 +158,7 @@ public class BookingController {
         ProductSupplierId.setText(b.getProductSupplierId()+"");
     }
     /**
-     * Creates a new Agent object from the text fields and tries to save this data to the database.
+     * Creates a new Booking object from the text fields and tries to save this data to the database.
      */
     public void saveEdit() {
         try {
@@ -181,7 +184,7 @@ public class BookingController {
     }
 
     /**
-     * Adds a new agent to the database.
+     * Adds a new Booking to the database.
      */
     public void commitAdd() {
         try {
@@ -207,7 +210,7 @@ public class BookingController {
     }
 
     /**
-     * Operation to delete a selected agent from the database.
+     * Operation to delete a selected Booking from the database.
      */
     public void deleteBooking() {
         BookingDetail b = (BookingDetail) lvBooking.getSelectionModel().getSelectedItem();
@@ -230,7 +233,7 @@ public class BookingController {
     }
 
     /**
-     * Refreshes the AgentListView.
+     * Refreshes the BookingListView.
      */
     private void RefreshBookingListView() {
         lvBooking.setItems(FXCollections.observableArrayList(fetchBooking()));
@@ -273,7 +276,7 @@ public class BookingController {
     }
 
     /**
-     * Enables adding of a new agent to the form. Disables 'edit' and 'new' buttons.
+     * Enables adding of a new Booking to the form. Disables 'edit' and 'new' buttons.
      */
     public void enableAdd() {
         btnAdd.setDisable(false);
@@ -289,7 +292,7 @@ public class BookingController {
     }
 
     /**
-     * Enables editing of an agent's information on the form. Disables edit button and enables save button.
+     * Enables editing of an Booking's information on the form. Disables edit button and enables save button.
      */
     public void enableSave() {
         btnSave.setDisable(false);
@@ -304,7 +307,7 @@ public class BookingController {
     }
 
     /**
-     * Disables editing of an agent's information on the form. Enables edit button and disables save button.
+     * Disables editing of an Booking's information on the form. Enables edit button and disables save button.
      */
     public void disableSave() {
         btnSave.setDisable(true);
@@ -319,7 +322,7 @@ public class BookingController {
     }
 
     /**
-     * Disables committing the adding of a new agent to the database. Disables add button, enables edit and new button.
+     * Disables committing the adding of a new Booking to the database. Disables add button, enables edit and new button.
      */
     public void disableAdd() {
         btnAdd.setDisable(true);

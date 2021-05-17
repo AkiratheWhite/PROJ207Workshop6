@@ -1,6 +1,10 @@
 package data.entity;
 
 import java.util.Date;
+/**
+ * Code written by:Dhava shah
+ * Last modified on (MM/DD/YY): 05/14/21
+ */
 
 public class Booking implements Entity {
     private Integer BookingId;
